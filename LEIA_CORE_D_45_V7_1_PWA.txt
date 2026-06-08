@@ -1,0 +1,23 @@
+CORE-D 45 V7.1 — App instalável no celular
+
+Arquivos para subir no GitHub, todos na raiz do repositório:
+- index.html
+- manifest.json
+- service-worker.js
+- icon-192.png
+- icon-512.png
+
+Como publicar:
+1. Suba/substitua todos os arquivos acima no repositório core-d-45.
+2. Aguarde o GitHub Pages atualizar.
+3. Abra o link no Chrome do celular.
+4. Entre com a senha: 45dnai.
+5. Vá em Dinheiro > Backup e segurança.
+6. Confirme URL /exec e token: core-d-45-danilo.
+7. Teste conexão.
+8. No Chrome, toque nos 3 pontinhos.
+9. Toque em Instalar app ou Adicionar à tela inicial.
+10. Abra pelo ícone CORE-D 45.
+
+Observação:
+Se o app parecer não atualizar, feche o Chrome, abra de novo ou limpe cache do site.

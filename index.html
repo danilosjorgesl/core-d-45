@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CORE-D 45 V7.0 FINAL — GitHub Ready -->
+<!-- CORE-D 45 V7.1 PWA FINAL — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CORE-D 45 — Painel de Vida e Rua</title>
+<title>CORE-D 45 — App</title>
 <meta name="theme-color" content="#f8fafc">
 <meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
 <meta name="robots" content="noindex,nofollow">
@@ -552,7 +552,85 @@ body.rua-mode .card:first-of-type{
   .lock-card{padding:20px}
 }
 
+
+/* V7.1 — PWA + acabamento mobile final */
+.install-app-hint{
+  display:none;
+  margin:10px 0 0;
+  border-radius:18px;
+  padding:11px 12px;
+  background:linear-gradient(135deg,#eff6ff,#ecfeff);
+  border:1px solid rgba(37,99,235,.16);
+  color:#1e3a8a;
+  font-weight:850;
+  font-size:.86rem;
+}
+.install-app-hint.show{display:block}
+.sync-mini-status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:.76rem;
+  font-weight:900;
+  padding:7px 9px;
+  border-radius:999px;
+  background:#f8fafc;
+  border:1px solid rgba(15,23,42,.08);
+  color:#334155;
+}
+.sync-mini-status .dot{
+  width:8px;height:8px;border-radius:50%;background:#94a3b8;
+}
+.sync-mini-status.ok .dot{background:#16a34a}
+.sync-mini-status.warn .dot{background:#f59e0b}
+.sync-mini-status.bad .dot{background:#dc2626}
+.greeting-line{
+  display:block;
+  margin-top:5px;
+  color:rgba(255,255,255,.86);
+  font-weight:850;
+  font-size:.9rem;
+}
+.quick-focus{
+  border-radius:18px;
+  padding:10px 12px;
+  background:#ffffff;
+  border:1px solid rgba(15,23,42,.08);
+  box-shadow:0 12px 26px rgba(15,23,42,.06);
+  margin:10px 0;
+  color:#0f172a;
+  font-weight:850;
+  font-size:.88rem;
+}
+.quick-focus b{color:#2563eb}
+.top .sync-mini-status{margin-left:auto}
+@media(max-width:520px){
+  .top{gap:8px}
+  .brand h1{font-size:1.02rem}
+  .brand p{font-size:.72rem}
+  .hero{padding:17px}
+  .hero h2{font-size:1.03rem}
+  .hero .money{font-size:2.15rem}
+  .card{padding:13px}
+  input,textarea,select{font-size:16px}
+  .btn{min-height:42px}
+  .grid2{gap:8px}
+  .tabs button{font-size:.72rem}
+}
+@media(display-mode: standalone){
+  .install-app-hint{display:none!important}
+}
+
 </style>
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="application-name" content="CORE-D 45">
+<meta name="apple-mobile-web-app-title" content="CORE-D 45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#2563eb">
+
 </head>
 <body class="locked">
 
@@ -947,7 +1025,8 @@ async function processPendingSync(){
  if(state._syncing) return;
  if(!sheetsConfigured()) { saveSilent(); return; }
  const next=state.pendingSync[0];
- if(!next) { renderSheetsStatus(); return; }
+ if(!next) { renderSheetsStatus();
+ renderV71Polish(); return; }
  state._syncing=true;
  try{
    const res=await jsonpRequest(state.sheets.url,{
@@ -962,12 +1041,14 @@ async function processPendingSync(){
    state._syncing=false;
    saveSilent();
    renderSheetsStatus();
+ renderV71Polish();
    if(state.pendingSync.length) processPendingSync();
  }catch(err){
    state.sheets.lastError=err.message||String(err);
    state._syncing=false;
    saveSilent();
    renderSheetsStatus();
+ renderV71Polish();
  }
 }
 async function testSheetsConnection(){
@@ -1454,11 +1535,55 @@ function renderModeExperience(){
 function render(){
  ensureSheetsState();
  renderHero();renderPriority();renderMission();renderMoney();renderMore();renderSmartDistribution(state.lastNetSaved||0);renderModeExperience();renderSheetsStatus();
+ renderV71Polish();
 
  applyLockState();
 }
 document.addEventListener("input",e=>{if(["quickUber","quick99","quickExtraRide","quickGas","quickSpend"].includes(e.target.id)) previewDriverDay()})
 render();
+
+function getGreetingText(){
+ const h=new Date().getHours();
+ if(h<5) return "Boa madrugada, Danilo. Só o necessário agora.";
+ if(h<12) return "Bom dia, Danilo. Gasolina primeiro, Kovi protegida.";
+ if(h<18) return "Boa tarde, Danilo. Mantém o foco no próximo lançamento.";
+ return "Boa noite, Danilo. Fecha limpo e não inventa moda.";
+}
+function getSyncMiniStatus(){
+ try{
+  ensureSheetsState();
+  const pending=(state.pendingSync||[]).length;
+  if(state.sheets.lastError) return {cls:"bad",txt:"Sheets com erro"};
+  if(pending>0) return {cls:"warn",txt:`${pending} pendente(s)`};
+  if(state.sheets.enabled && state.sheets.url && state.sheets.token) return {cls:"ok",txt:"Sheets OK"};
+  return {cls:"",txt:"Backup off"};
+ }catch(e){return {cls:"",txt:"Backup off"}}
+}
+function renderV71Polish(){
+ const st=getSyncMiniStatus();
+ document.querySelectorAll("[data-sync-mini]").forEach(el=>{
+  el.className=`sync-mini-status ${st.cls}`;
+  el.innerHTML=`<span class="dot"></span><span>${st.txt}</span>`;
+ });
+ document.querySelectorAll("[data-greeting-line]").forEach(el=>{el.textContent=getGreetingText()});
+ const hint=document.querySelector("[data-install-hint]");
+ if(hint){
+  const standalone=window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+  const ios=window.navigator.standalone===true;
+  if(!standalone && !ios) hint.classList.add("show");
+  else hint.classList.remove("show");
+ }
+}
+
 </script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+
 </body>
 </html>
