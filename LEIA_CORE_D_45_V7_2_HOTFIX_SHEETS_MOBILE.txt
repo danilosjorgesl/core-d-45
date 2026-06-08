@@ -1,0 +1,31 @@
+CORE-D 45 V7.2 — Hotfix Sheets no celular
+
+Problema corrigido:
+- No PC o Sheets funcionava.
+- No celular/PWA o teste podia cair em erro ou fila.
+- Causa provável: service-worker/cache do PWA interferindo na chamada do Google Apps Script.
+
+O que mudou:
+- O service-worker agora só cuida dos arquivos do próprio GitHub Pages.
+- Chamadas para Google Apps Script/googleusercontent passam direto, sem cache.
+- URL e token são limpos com trim.
+- Chamadas recebem cache-bust.
+
+Como atualizar:
+1. Suba todos estes arquivos na raiz do GitHub:
+   - index.html
+   - manifest.json
+   - service-worker.js
+   - icon-192.png
+   - icon-512.png
+2. Aguarde o GitHub Pages atualizar.
+3. No celular, remova o app CORE-D da tela inicial.
+4. Abra o link no Chrome normal:
+   https://danilosjorgesl.github.io/core-d-45/
+5. Atualize a página 2 vezes.
+6. Entre com a senha 45dnai.
+7. Configure Sheets:
+   URL /exec
+   token core-d-45-danilo
+8. Salvar conexão > Testar conexão.
+9. Depois instale o app de novo.

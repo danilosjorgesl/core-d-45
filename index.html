@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- CORE-D 45 V7.1 PWA FINAL — GitHub Ready -->
+<!-- CORE-D 45 V7.2 HOTFIX SHEETS MOBILE — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
@@ -1052,6 +1052,8 @@ async function processPendingSync(){
  }
 }
 async function testSheetsConnection(){
+ try{normalizeSheetsConfigFields();}catch(e){}
+
  ensureSheetsState();
  const url=(document.getElementById("sheetUrl")?.value||"").trim();
  const token=(document.getElementById("sheetToken")?.value||"").trim();
@@ -1068,7 +1070,17 @@ async function testSheetsConnection(){
    save();
  }
 }
+
+function normalizeSheetsConfigFields(){
+ const u=document.getElementById("sheetsUrl");
+ const t=document.getElementById("sheetsToken");
+ if(u) u.value=(u.value||"").trim();
+ if(t) t.value=(t.value||"").trim();
+}
+
 function saveSheetsConfig(){
+ try{normalizeSheetsConfigFields();}catch(e){}
+
  ensureSheetsState();
  state.sheets.url=(document.getElementById("sheetUrl")?.value||"").trim();
  state.sheets.token=(document.getElementById("sheetToken")?.value||"").trim();
@@ -1192,7 +1204,7 @@ function renderSheetsStatus(){
     ${state.pendingSync.length?`<div class="sync-panel warn"><b>${state.pendingSync.length} pendente(s).</b> Serão reenviados quando a conexão funcionar.</div>`:""}
     ${state.sheets.lastError?`<div class="sync-panel danger"><b>Erro:</b> ${state.sheets.lastError}</div>`:""}
     ${state.sheets.lastSync?`<div class="sync-panel ok"><b>Último sync:</b> ${new Date(state.sheets.lastSync).toLocaleString("pt-BR")}</div>`:""}
-    <div class="publish-note"><b>Pronto para GitHub:</b> renomeie este arquivo para <b>index.html</b> antes de publicar.</div>
+    <div class="publish-note"><b>V7.2 mobile hotfix:</b> Sheets mobile corrigido. Arquivo: <b>index.html</b> antes de publicar.</div>
    </div>`;
  }
  const bp=document.getElementById("backupPanel");

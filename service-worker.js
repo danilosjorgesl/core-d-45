@@ -1,4 +1,4 @@
-const CORE_D_CACHE = "core-d-45-v7-1";
+const CORE_D_CACHE = "core-d-45-v7-2";
 const CORE_D_ASSETS = [
   "./",
   "./index.html",
@@ -21,6 +21,14 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+
+  const url = new URL(event.request.url);
+
+  // CRÍTICO: não interceptar Google Apps Script / googleusercontent / chamadas externas.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => {
       return cached || fetch(event.request).then(response => {
