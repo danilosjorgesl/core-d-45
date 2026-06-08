@@ -1,0 +1,38 @@
+CORE-D 45 V7.3 — Sheets automático no celular
+
+Motivo:
+No celular, a URL gigante do Apps Script estava abrindo quebrada como Google Drive.
+Esta versão traz a URL e o token embutidos.
+
+Como atualizar:
+1. Suba todos os arquivos deste pacote na raiz do GitHub:
+   index.html
+   manifest.json
+   service-worker.js
+   icon-192.png
+   icon-512.png
+
+2. Aguarde o GitHub Pages atualizar.
+
+3. No celular:
+   - remova o app antigo da tela inicial;
+   - abra pelo Chrome:
+     https://danilosjorgesl.github.io/core-d-45/
+   - atualize 2 vezes.
+
+4. Entre com a senha:
+   45dnai
+
+5. Vá em Dinheiro > Backup e segurança.
+
+6. Clique em:
+   Configurar automático
+
+7. Depois clique:
+   Testar conexão
+
+URL embutida:
+https://script.google.com/macros/s/AKfycbxBxGj_bn-J2oJD2gQachP3ryzf-j8ZbVEyVq_Evb7fS4sPuXQHzkMsQkbdo8Xo-pElYw/exec
+
+Token embutido:
+core-d-45-danilo

@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CORE-D 45 V7.2 HOTFIX SHEETS MOBILE — GitHub Ready -->
+<!-- CORE-D 45 V7.3 SHEETS AUTO CONFIG — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CORE-D 45 — App</title>
+<title>CORE-D 45 — App V7.3</title>
 <meta name="theme-color" content="#f8fafc">
 <meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
 <meta name="robots" content="noindex,nofollow">
@@ -1071,6 +1071,35 @@ async function testSheetsConnection(){
  }
 }
 
+
+const DEFAULT_SHEETS_URL_CORE_D = "https://script.google.com/macros/s/AKfycbxBxGj_bn-J2oJD2gQachP3ryzf-j8ZbVEyVq_Evb7fS4sPuXQHzkMsQkbdo8Xo-pElYw/exec";
+const DEFAULT_SHEETS_TOKEN_CORE_D = "core-d-45-danilo";
+
+function configurarSheetsAutomaticoCoreD(){
+  try{
+    ensureSheetsState();
+    state.sheets.url = DEFAULT_SHEETS_URL_CORE_D;
+    state.sheets.token = DEFAULT_SHEETS_TOKEN_CORE_D;
+    state.sheets.enabled = true;
+    state.sheets.lastError = "";
+    const u=document.getElementById("sheetsUrl");
+    const t=document.getElementById("sheetsToken");
+    const e=document.getElementById("sheetsEnabled");
+    if(u) u.value = DEFAULT_SHEETS_URL_CORE_D;
+    if(t) t.value = DEFAULT_SHEETS_TOKEN_CORE_D;
+    if(e) e.checked = true;
+    save();
+    toast("Sheets configurado automaticamente.");
+    try{ renderApp(); }catch(_e){}
+  }catch(err){
+    toast("Erro ao configurar Sheets automático.");
+  }
+}
+function testarSheetsAutomaticoCoreD(){
+  configurarSheetsAutomaticoCoreD();
+  setTimeout(()=>{ try{ testSheetsConnection(); }catch(e){ toast("Erro no teste do Sheets."); } }, 300);
+}
+
 function normalizeSheetsConfigFields(){
  const u=document.getElementById("sheetsUrl");
  const t=document.getElementById("sheetsToken");
@@ -1182,7 +1211,7 @@ function renderSheetsStatus(){
    ensureSheetsState();
    p.innerHTML=`<div class="config-box">
     <h3>Backup automático no Google Sheets</h3>
-    <p class="muted tiny">Ao salvar o dia, o CORE-D guarda no celular e envia uma cópia para a planilha.</p>
+    <p class="muted tiny">Ao salvar o dia, o CORE-D guarda no celular e envia uma cópia para a planilha. Use Configurar automático se estiver no celular.</p>
     <div data-sync-status></div>
     <div class="form" style="margin-top:10px">
       <div class="field"><label>URL do Web App / Apps Script</label><textarea id="sheetUrl" placeholder="Cole aqui a URL terminada em /exec">${state.sheets.url||""}</textarea></div>
@@ -1192,6 +1221,7 @@ function renderSheetsStatus(){
     <div class="toolsgrid" style="margin-top:10px">
       <button class="btn primary" onclick="saveSheetsConfig()">Salvar conexão</button>
       <button class="btn green" onclick="testSheetsConnection()">Testar conexão</button>
+      <button class="btn primary" onclick="testarSheetsAutomaticoCoreD()">Configurar automático</button>
       <button class="btn" onclick="processPendingSync()">Reenviar pendentes</button>
       <button class="btn" onclick="copyTokenSuggestion()">Copiar token sugerido</button>
     </div>
@@ -1586,6 +1616,17 @@ function renderV71Polish(){
   else hint.classList.remove("show");
  }
 }
+
+
+function autoFillSheetsFieldsCoreD(){
+  try{
+    const u=document.getElementById("sheetsUrl");
+    const t=document.getElementById("sheetsToken");
+    if(u && !(u.value||"").trim()) u.value = DEFAULT_SHEETS_URL_CORE_D;
+    if(t && !(t.value||"").trim()) t.value = DEFAULT_SHEETS_TOKEN_CORE_D;
+  }catch(e){}
+}
+setInterval(autoFillSheetsFieldsCoreD, 1500);
 
 </script>
 
