@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CORE-D 45 V7.3 SHEETS AUTO CONFIG — GitHub Ready -->
+<!-- CORE-D 45 V7.5 LINK SHEETS OFICIAL — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CORE-D 45 — App V7.3</title>
+<title>CORE-D 45 — App V7.5</title>
 <meta name="theme-color" content="#f8fafc">
 <meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
 <meta name="robots" content="noindex,nofollow">
@@ -1072,8 +1072,59 @@ async function testSheetsConnection(){
 }
 
 
-const DEFAULT_SHEETS_URL_CORE_D = "https://script.google.com/macros/s/AKfycbxBxGj_bn-J2oJD2gQachP3ryzf-j8ZbVEyVq_Evb7fS4sPuXQHzkMsQkbdo8Xo-pElYw/exec";
+const DEFAULT_SHEETS_URL_CORE_D = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
 const DEFAULT_SHEETS_TOKEN_CORE_D = "core-d-45-danilo";
+
+
+
+function aplicarLinkOficialSheetsV75(){
+  try{
+    ensureSheetsState();
+    state.sheets.url = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
+    state.sheets.token = "core-d-45-danilo";
+    state.sheets.enabled = true;
+    state.sheets.lastError = "";
+    const u=document.getElementById("sheetsUrl");
+    const t=document.getElementById("sheetsToken");
+    const e=document.getElementById("sheetsEnabled");
+    if(u) u.value = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
+    if(t) t.value = "core-d-45-danilo";
+    if(e) e.checked = true;
+    save();
+    toast("Link oficial do Sheets aplicado.");
+    try{ renderApp(); }catch(_e){}
+  }catch(err){ toast("Erro ao aplicar link oficial."); }
+}
+function testarLinkOficialSheetsV75(){
+  aplicarLinkOficialSheetsV75();
+  setTimeout(()=>{ try{ testSheetsConnection(); }catch(e){ toast("Erro no teste."); } }, 350);
+}
+
+function forcarNovaUrlSheetsV74(){
+  try{
+    ensureSheetsState();
+    state.sheets.url = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
+    state.sheets.token = "core-d-45-danilo";
+    state.sheets.enabled = true;
+    state.sheets.lastError = "";
+    state.pendingSync = [];
+    const u=document.getElementById("sheetsUrl");
+    const t=document.getElementById("sheetsToken");
+    const e=document.getElementById("sheetsEnabled");
+    if(u) u.value = state.sheets.url;
+    if(t) t.value = state.sheets.token;
+    if(e) e.checked = true;
+    save();
+    toast("Link oficial do Sheets aplicado e fila limpa.");
+    try{ renderApp(); }catch(_e){}
+  }catch(err){
+    toast("Erro ao aplicar URL nova.");
+  }
+}
+function testarNovaUrlSheetsV74(){
+  forcarNovaUrlSheetsV74();
+  setTimeout(()=>{ try{ testSheetsConnection(); }catch(e){ toast("Erro no teste."); } }, 350);
+}
 
 function configurarSheetsAutomaticoCoreD(){
   try{
@@ -1222,6 +1273,10 @@ function renderSheetsStatus(){
       <button class="btn primary" onclick="saveSheetsConfig()">Salvar conexão</button>
       <button class="btn green" onclick="testSheetsConnection()">Testar conexão</button>
       <button class="btn primary" onclick="testarSheetsAutomaticoCoreD()">Configurar automático</button>
+      <button class="btn orange" onclick="testarNovaUrlSheetsV74()">Aplicar link oficial Sheets</button>
+      <button class="btn green" onclick="testarLinkOficialSheetsV75()">Testar link oficial</button>
+      <button class="btn orange" onclick="testarNovaUrlSheetsV74()">Aplicar link oficial Sheets</button>
+      <button class="btn green" onclick="testarLinkOficialSheetsV75()">Testar link oficial</button>
       <button class="btn" onclick="processPendingSync()">Reenviar pendentes</button>
       <button class="btn" onclick="copyTokenSuggestion()">Copiar token sugerido</button>
     </div>
@@ -1234,7 +1289,7 @@ function renderSheetsStatus(){
     ${state.pendingSync.length?`<div class="sync-panel warn"><b>${state.pendingSync.length} pendente(s).</b> Serão reenviados quando a conexão funcionar.</div>`:""}
     ${state.sheets.lastError?`<div class="sync-panel danger"><b>Erro:</b> ${state.sheets.lastError}</div>`:""}
     ${state.sheets.lastSync?`<div class="sync-panel ok"><b>Último sync:</b> ${new Date(state.sheets.lastSync).toLocaleString("pt-BR")}</div>`:""}
-    <div class="publish-note"><b>V7.2 mobile hotfix:</b> Sheets mobile corrigido. Arquivo: <b>index.html</b> antes de publicar.</div>
+    <div class="publish-note"><b>V7.2 mobile hotfix:</b> Link oficial do Sheets atualizado. Arquivo: <b>index.html</b> antes de publicar.</div>
    </div>`;
  }
  const bp=document.getElementById("backupPanel");

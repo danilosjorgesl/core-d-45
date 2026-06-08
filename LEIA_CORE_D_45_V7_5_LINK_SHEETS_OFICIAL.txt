@@ -1,0 +1,25 @@
+CORE-D 45 V7.5 — Link oficial do Sheets atualizado
+
+URL oficial embutida:
+https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec
+
+Token:
+core-d-45-danilo
+
+Como atualizar:
+1. Suba todos os arquivos deste pacote na raiz do GitHub:
+   - index.html
+   - manifest.json
+   - service-worker.js
+   - icon-192.png
+   - icon-512.png
+
+No celular:
+1. Remova o app CORE-D instalado.
+2. Abra no Chrome:
+   https://danilosjorgesl.github.io/core-d-45/
+3. Atualize a página 2 vezes.
+4. Entre com senha 45dnai.
+5. Vá em Dinheiro > Backup e segurança.
+6. Clique em Testar link oficial.
+7. Se der OK, instale o app novamente.
