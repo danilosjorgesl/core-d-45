@@ -1,0 +1,19 @@
+CORE-D 45 V7.6 — Contas pagas corrigidas
+
+Correção:
+- Conta marcada como Paga sai da próxima prioridade.
+- Conta paga não entra mais em Pendentes.
+- Caixinhas inteligentes ignoram obrigação já paga.
+- Painel de controle recalcula sem contas pagas.
+
+Como atualizar:
+1. Suba todos os arquivos na raiz do GitHub:
+   index.html
+   manifest.json
+   service-worker.js
+   icon-192.png
+   icon-512.png
+2. No celular, abra:
+   https://danilosjorgesl.github.io/core-d-45/?v=76
+3. Atualize duas vezes.
+4. Confira se a Kovi paga sumiu da próxima prioridade.

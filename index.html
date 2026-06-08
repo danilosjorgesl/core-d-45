@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CORE-D 45 V7.5 LINK SHEETS OFICIAL — GitHub Ready -->
+<!-- CORE-D 45 V7.6 CONTAS PAGAS CORRIGIDAS — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CORE-D 45 — App V7.5</title>
+<title>CORE-D 45 — App V7.6</title>
 <meta name="theme-color" content="#f8fafc">
 <meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
 <meta name="robots" content="noindex,nofollow">
@@ -1420,7 +1420,7 @@ function payBillWithBox(id){
  }
  box.saved=Math.max(0,boxSaved-useBox);
  if(needSaldo>0) state.saldo=round2(state.saldo-needSaldo);
- b.paid=true;
+ b.paid=true; try{normalizePaidBillsCoreD();}catch(e){}
  record("conta", needSaldo>0 ? "Conta paga com caixinha + saldo" : "Conta paga com caixinha", b.name, billValue, `Caixinha ${brl(useBox)}${needSaldo>0?` | Saldo ${brl(needSaldo)}`:""}`);
  queueSheetEvent(needSaldo>0 ? "pagar_com_caixinha_saldo" : "pagar_com_caixinha",{conta:b.name,valor:billValue,caixinha:box.name,usado_caixinha:useBox,usado_saldo:needSaldo,caixinha_saldo_apos:box.saved,observacao:"Conta paga usando caixinha"});
  save();
@@ -1440,7 +1440,7 @@ function payBill(id){
 ${b.name} — ${brl(b.value)}
 Isso vai reduzir teu saldo.`))return;
  if(state.saldo<b.value && !confirm("Saldo menor que a conta. Pagar mesmo assim?"))return;
- state.saldo=round2(state.saldo-(Number(b.value)||0));b.paid=true;record("conta","Conta paga",b.name,b.value,b.due);queueSheetEvent("pagar_conta",{conta:b.name,valor:b.value,forma:"saldo",vencimento:b.due,observacao:"Conta paga com saldo"});save();
+ state.saldo=round2(state.saldo-(Number(b.value)||0));b.paid=true; try{normalizePaidBillsCoreD();}catch(e){}record("conta","Conta paga",b.name,b.value,b.due);queueSheetEvent("pagar_conta",{conta:b.name,valor:b.value,forma:"saldo",vencimento:b.due,observacao:"Conta paga com saldo"});save();
 }
 function depositBox(id){
  const b=state.boxes.find(x=>x.id===id); if(!b)return;
@@ -1682,6 +1682,50 @@ function autoFillSheetsFieldsCoreD(){
   }catch(e){}
 }
 setInterval(autoFillSheetsFieldsCoreD, 1500);
+
+
+/* V7.6 — correção: contas pagas não entram em prioridade/pendentes */
+function isBillPaidCoreD(bill){
+  return !!(bill && (bill.paid === true || bill.status === "paga" || bill.status === "paid"));
+}
+function activeMissionBillsCoreD(){
+  try{
+    return (state.bills||[])
+      .filter(b => (b.mission||"") === state.activeMission)
+      .filter(b => !isBillPaidCoreD(b));
+  }catch(e){ return []; }
+}
+function paidMissionBillNamesCoreD(){
+  try{
+    const paid=(state.bills||[])
+      .filter(b => (b.mission||"") === state.activeMission)
+      .filter(isBillPaidCoreD)
+      .map(b => String(b.name||b.nome||"").toLowerCase().trim());
+    return new Set(paid);
+  }catch(e){ return new Set(); }
+}
+function activeMissionBoxesCoreD(){
+  try{
+    const paidNames=paidMissionBillNamesCoreD();
+    return (state.boxes||state.caixinhas||[])
+      .filter(c => (c.mission||"") === state.activeMission)
+      .filter(c => !paidNames.has(String(c.name||c.nome||"").toLowerCase().trim()));
+  }catch(e){ return []; }
+}
+function normalizePaidBillsCoreD(){
+  try{
+    const paidNames=paidMissionBillNamesCoreD();
+    let changed=false;
+    (state.boxes||state.caixinhas||[]).forEach(c=>{
+      const name=String(c.name||c.nome||"").toLowerCase().trim();
+      if(paidNames.has(name)){
+        c._hiddenBecauseBillPaid=true;
+        changed=true;
+      }
+    });
+    if(changed) save();
+  }catch(e){}
+}
 
 </script>
 

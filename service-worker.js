@@ -1,4 +1,4 @@
-const CORE_D_CACHE = "core-d-45-v7-5";
+const CORE_D_CACHE = "core-d-45-v7-6";
 const CORE_D_ASSETS = [
   "./",
   "./index.html",
