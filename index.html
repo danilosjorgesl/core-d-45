@@ -1,0 +1,1464 @@
+<!doctype html>
+<!-- CORE-D 45 V7.0 FINAL — GitHub Ready -->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CORE-D 45 — Painel de Vida e Rua</title>
+<meta name="theme-color" content="#f8fafc">
+<meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CORE-D 45">
+<meta name="mobile-web-app-capable" content="yes">
+
+<style>
+:root{
+  --bg:#f6f8fc;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;
+  --blue:#2563eb;--blue2:#0ea5e9;--green:#16a34a;--orange:#f97316;--red:#dc2626;
+  --shadow:0 18px 45px rgba(15,23,42,.08);--radius:24px;
+}
+*{box-sizing:border-box}html,body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f8fafc 32%,#f6f8fc 100%);color:var(--text)}
+body{min-height:100vh;padding-bottom:86px}
+button,input,textarea,select{font:inherit}
+.app{max-width:980px;margin:0 auto;padding:14px}
+.top{
+  position:sticky;top:0;z-index:20;background:rgba(248,250,252,.9);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(226,232,240,.7);padding:10px 14px;margin:0 -14px 12px;
+}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 10px 25px rgba(37,99,235,.25)}
+.brand h1{font-size:1rem;line-height:1.05;margin:0;font-weight:950;letter-spacing:-.04em}
+.brand small{display:block;color:var(--muted);font-size:.72rem;margin-top:2px}
+.modepill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:850;font-size:.78rem;max-width:150px;line-height:1.1}
+.hero{background:linear-gradient(135deg,#0f172a,#1e3a8a 58%,#0284c7);border-radius:28px;color:#fff;padding:18px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.hero:after{content:"";position:absolute;right:-40px;top:-50px;width:180px;height:180px;border-radius:999px;background:rgba(255,255,255,.12)}
+.hero small{opacity:.75}.hero .money{font-size:2.25rem;font-weight:950;letter-spacing:-.08em;margin:6px 0 0}
+.herogrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.heromini{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:10px}
+.heromini b{display:block;font-size:1rem}.heromini small{font-size:.7rem}
+.card{background:rgba(255,255,255,.96);border:1px solid rgba(226,232,240,.9);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:12px 0}
+.card h2,.card h3{margin:0 0 10px;font-weight:950;letter-spacing:-.045em}.card h2{font-size:1.18rem}.card h3{font-size:1.02rem}
+.muted{color:var(--muted)}.tiny{font-size:.78rem}.green{color:var(--green)}.red{color:var(--red)}.orange{color:var(--orange)}.blue{color:var(--blue)}
+.form{display:grid;gap:12px}.field label{display:block;font-size:.78rem;font-weight:900;color:#334155;margin:0 0 6px}
+.inputwrap{display:flex;align-items:center;background:#f8fafc;border:1px solid #dbe3ee;border-radius:18px;padding:0 12px;min-height:56px}
+.inputwrap span{font-weight:950;color:#64748b;margin-right:6px}.inputwrap input{width:100%;border:0;background:transparent;outline:0;font-size:1.25rem;font-weight:850;color:var(--text)}
+textarea{width:100%;border:1px solid #dbe3ee;background:#f8fafc;border-radius:18px;padding:12px;outline:0;resize:vertical;min-height:72px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:0;border-radius:18px;padding:14px 16px;font-weight:950;cursor:pointer;background:#e2e8f0;color:#0f172a}
+.btn.full{width:100%}.btn.big{font-size:1.03rem;padding:17px}.btn.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}.btn.green{background:var(--green);color:#fff}.btn.orange{background:var(--orange);color:#fff}.btn.red{background:var(--red);color:#fff}
+.result{display:none}.result.show{display:block}.resultgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.rmini{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:10px}.rmini small{display:block;color:var(--muted);font-size:.72rem}.rmini b{font-size:1rem}
+.priority{border-left:5px solid var(--orange);background:#fff7ed;border-radius:18px;padding:12px;margin-top:12px}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.95);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabs button{border:0;background:transparent;border-radius:16px;padding:8px 4px;color:#64748b;font-size:.75rem;font-weight:900}.tabs button.active{background:#eff6ff;color:var(--blue)}.tabs span{display:block;font-size:1.15rem;margin-bottom:2px}
+.tab{display:none}.tab.active{display:block}
+details{background:#fff;border:1px solid var(--line);border-radius:22px;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
+summary{list-style:none;padding:15px;font-weight:950;cursor:pointer;display:flex;justify-content:space-between;gap:8px}summary::-webkit-details-marker{display:none}.foldbody{padding:0 15px 15px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kpi{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.kpi small{display:block;color:var(--muted);font-size:.72rem}.kpi b{font-size:1.1rem}
+.list{display:grid;gap:8px}.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.itemhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.item small{color:var(--muted)}
+.status{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:.72rem;font-weight:950;background:#f1f5f9}.status.ok{background:#dcfce7;color:#166534}.status.warn{background:#ffedd5;color:#9a3412}.status.danger{background:#fee2e2;color:#991b1b}
+.progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:10px 0}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px}
+.toolsgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hidden{display:none!important}
+@media(min-width:760px){
+  .app{padding:22px}.top{margin:0 -22px 16px;padding:12px 22px}.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;align-items:start}.hero .money{font-size:2.7rem}
+  .form.desktop2{grid-template-columns:1fr 1fr}.field.wide{grid-column:1/-1}.kpis,.resultgrid{grid-template-columns:repeat(4,1fr)}.toolsgrid{grid-template-columns:repeat(4,1fr)}
+}
+
+body.rua-mode .control-only{display:none!important}
+body.rua-mode .tabs button:nth-child(n+3){display:none}
+body.rua-mode .tabs{grid-template-columns:repeat(2,1fr)}
+body.rua-mode #tab-hoje .layout{display:block}
+body.rua-mode .top{background:rgba(248,250,252,.96)}
+body.controle-mode .street-only-note{display:none!important}
+body.controle-mode .control-only{display:block}
+body.controle-mode .tabs{grid-template-columns:repeat(4,1fr)}
+.mode-banner{border-radius:20px;padding:12px;margin:12px 0;font-weight:900}
+.mode-banner.rua{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}
+.mode-banner.controle{background:#f8fafc;color:#0f172a;border:1px solid #cbd5e1}
+.control-dashboard{display:none}
+body.controle-mode .control-dashboard{display:block}
+body.controle-mode .street-compact{display:none}
+body.rua-mode .street-compact{display:block}
+body.controle-mode .street-full{display:block}
+body.rua-mode .street-full{display:block}
+
+
+/* V5.2 UX hierarchy fixes */
+body.rua-mode #controlDashboard{display:none!important}
+body.controle-mode #controlDashboard{display:block!important}
+body.controle-mode .layout{display:block}
+body.controle-mode .control-dashboard{margin-top:12px}
+body.controle-mode .hero{padding:15px;border-radius:24px}
+body.controle-mode .hero .money{font-size:2rem}
+body.controle-mode .herogrid{grid-template-columns:repeat(4,1fr);gap:7px}
+body.controle-mode .heromini{padding:8px;border-radius:15px}
+body.controle-mode .heromini b{font-size:.88rem}
+body.controle-mode .heromini small{font-size:.66rem}
+body.controle-mode .top .brand small::after{content:""}
+.control-compact-card{background:rgba(255,255,255,.96);border:1px solid rgba(226,232,240,.9);border-radius:22px;box-shadow:var(--shadow);padding:14px;margin:12px 0}
+.control-compact-card h2{margin:0 0 10px;font-size:1.05rem;font-weight:950;letter-spacing:-.04em}
+.compact-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.compact-actions button{padding:10px 8px;border-radius:14px;font-size:.78rem;line-height:1.15}
+body.rua-mode .tabs button:nth-child(n+3){display:none!important}
+body.rua-mode .tabs{grid-template-columns:repeat(2,1fr)!important}
+body.controle-mode .tabs button{display:block!important}
+body.controle-mode .tabs{grid-template-columns:repeat(4,1fr)!important}
+@media(max-width:520px){
+  body.controle-mode .herogrid{grid-template-columns:repeat(2,1fr)}
+  .compact-actions{grid-template-columns:repeat(2,1fr)}
+}
+
+
+/* V5.3 — Modo Rua Compacto */
+body.rua-mode .top{padding:8px 14px;margin-bottom:8px}
+body.rua-mode .brand .logo{width:34px;height:34px;border-radius:12px}
+body.rua-mode .brand h1{font-size:.98rem}
+body.rua-mode .brand small{font-size:.68rem}
+body.rua-mode .modepill{font-size:.72rem;padding:8px 10px;max-width:128px}
+body.rua-mode #modeBanner{display:none!important}
+body.rua-mode .hero{
+  padding:13px 14px;
+  border-radius:22px;
+  margin-bottom:10px;
+}
+body.rua-mode .hero small:first-child{font-size:.72rem}
+body.rua-mode .hero .money{
+  font-size:1.95rem;
+  margin:3px 0 0;
+  letter-spacing:-.07em;
+}
+body.rua-mode .herogrid{
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+body.rua-mode .heromini{
+  padding:8px;
+  border-radius:13px;
+  min-height:auto;
+}
+body.rua-mode .heromini:nth-child(3){display:none}
+body.rua-mode .heromini small{font-size:.62rem}
+body.rua-mode .heromini b{font-size:.78rem;line-height:1.05}
+body.rua-mode .card{
+  margin:8px 0;
+  padding:13px;
+  border-radius:20px;
+}
+body.rua-mode .card h2{
+  font-size:1.05rem;
+  margin-bottom:8px;
+}
+body.rua-mode .form{gap:8px}
+body.rua-mode .field label{font-size:.74rem;margin-bottom:4px}
+body.rua-mode .inputwrap{
+  min-height:50px;
+  border-radius:15px;
+}
+body.rua-mode .inputwrap input{font-size:1.08rem}
+body.rua-mode textarea{min-height:56px;border-radius:15px}
+body.rua-mode .btn.big{padding:14px;font-size:.98rem}
+body.rua-mode .btn{border-radius:15px}
+body.rua-mode .priority{padding:10px;border-radius:15px}
+body.rua-mode .resultgrid{grid-template-columns:repeat(2,1fr)}
+body.rua-mode .rmini{padding:8px;border-radius:13px}
+body.rua-mode .rmini b{font-size:.92rem}
+body.rua-mode .rmini small{font-size:.66rem}
+@media(max-width:520px){
+  body.rua-mode .app{padding:10px 14px}
+  body.rua-mode .twocol{grid-template-columns:1fr 1fr}
+}
+
+
+/* V5.4 — Entrada rápida real */
+body.rua-mode .hero{
+  padding:12px 13px;
+  border-radius:20px;
+}
+body.rua-mode .hero .money{font-size:1.8rem}
+body.rua-mode .herogrid{grid-template-columns:repeat(3,1fr);margin-top:8px}
+body.rua-mode .heromini{padding:7px}
+body.rua-mode .heromini b{font-size:.74rem}
+body.rua-mode .quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.rua-mode .quick-grid .field.wide{grid-column:auto}
+body.rua-mode .quick-optional{display:none}
+body.rua-mode .quick-optional.open{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.rua-mode #quickObsWrap.open{display:block}
+body.rua-mode .save-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:10px;
+}
+body.rua-mode .inputwrap{
+  min-height:48px;
+  padding:0 10px;
+}
+body.rua-mode .inputwrap span{font-size:.86rem}
+body.rua-mode .inputwrap input{font-size:1rem}
+body.rua-mode .card h2{font-size:1rem}
+body.rua-mode .field label{font-size:.72rem}
+.optional-toggle{
+  margin-top:8px;
+  background:#f1f5f9;
+  color:#334155;
+}
+body.controle-mode #modeBanner{
+  display:none!important;
+}
+body.controle-mode .hero{
+  padding:12px 13px;
+  border-radius:20px;
+}
+body.controle-mode .hero .money{font-size:1.85rem}
+body.controle-mode .herogrid{
+  grid-template-columns:repeat(3,1fr);
+  margin-top:8px;
+}
+body.controle-mode .heromini{
+  padding:7px;
+  border-radius:13px;
+}
+body.controle-mode .heromini:nth-child(3){display:none}
+body.controle-mode .quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.controle-mode .quick-optional{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.controle-mode #quickObsWrap{display:block}
+body.controle-mode .save-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+@media(min-width:760px){
+  body.rua-mode .quick-grid,
+  body.controle-mode .quick-grid{grid-template-columns:repeat(4,1fr)}
+  body.rua-mode .quick-optional.open,
+  body.controle-mode .quick-optional{grid-template-columns:repeat(3,1fr)}
+}
+
+
+/* V5.5 — Caixinhas inteligentes */
+.smart-distribution{border-left:5px solid var(--green);background:#f0fdf4;border-radius:18px;padding:12px;margin-top:12px}
+.smart-distribution h3{margin:0 0 8px;font-size:1rem}
+.dist-line{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;background:#fff;border:1px solid #bbf7d0;border-radius:14px;padding:10px;margin-top:8px}
+.dist-line small{color:var(--muted)}
+.quick-box-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.quick-box-actions button{padding:9px 6px;border-radius:12px;font-size:.75rem}
+.mission-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.mission-summary-mini{background:#fff;border:1px solid #dbeafe;border-radius:14px;padding:10px}
+.mission-summary-mini small{display:block;color:var(--muted);font-size:.68rem}
+.mission-summary-mini b{font-size:.92rem}
+@media(min-width:760px){.mission-summary-grid{grid-template-columns:repeat(4,1fr)}}
+
+
+/* V5.6 — pagar conta com caixinha */
+.pay-options{display:grid;grid-template-columns:1fr;gap:8px;margin-top:9px}
+.pay-options .btn{font-size:.82rem;padding:11px 10px}
+.box-pay-status{margin-top:8px;border-radius:14px;padding:9px 10px;background:#f8fafc;border:1px solid var(--line);font-size:.82rem;color:#334155}
+.box-pay-status b{color:#0f172a}
+@media(min-width:760px){.pay-options{grid-template-columns:repeat(3,1fr)}}
+
+
+/* V5.7 — correção operacional: sem + campos, excluir e resetar dia */
+body.rua-mode .quick-grid,
+body.controle-mode .quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.rua-mode .quick-optional,
+body.controle-mode .quick-optional{
+  display:grid!important;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.rua-mode #quickObsWrap,
+body.controle-mode #quickObsWrap{
+  display:block!important;
+}
+.optional-toggle{display:none!important}
+.tx-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tx-actions .btn{padding:9px 10px;border-radius:12px;font-size:.78rem}
+.danger-zone{border-left:5px solid var(--red);background:#fff1f2;border-radius:18px;padding:12px;margin-top:12px}
+@media(min-width:760px){
+  body.rua-mode .quick-grid,
+  body.controle-mode .quick-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+
+/* V6.0 — Google Sheets Backup Automático */
+.sync-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;font-weight:950;font-size:.76rem;background:#f1f5f9;color:#334155}
+.sync-pill.ok{background:#dcfce7;color:#166534}
+.sync-pill.warn{background:#ffedd5;color:#9a3412}
+.sync-pill.danger{background:#fee2e2;color:#991b1b}
+.sync-panel{border-left:5px solid var(--blue);background:#eff6ff;border-radius:18px;padding:12px;margin-top:12px}
+.sync-panel.ok{border-left-color:var(--green);background:#f0fdf4}
+.sync-panel.warn{border-left-color:var(--orange);background:#fff7ed}
+.sync-panel.danger{border-left-color:var(--red);background:#fff1f2}
+.config-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:12px}
+
+
+/* V6.1 — Tela de senha restaurada */
+.lock-screen{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:linear-gradient(180deg,#eef6ff 0,#f8fafc 42%,#f6f8fc 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.lock-card{
+  width:min(420px,100%);
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(226,232,240,.95);
+  border-radius:28px;
+  box-shadow:0 24px 70px rgba(15,23,42,.16);
+  padding:22px;
+}
+.lock-logo{
+  width:58px;
+  height:58px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  box-shadow:0 14px 34px rgba(37,99,235,.28);
+  margin-bottom:14px;
+}
+.lock-card h1{
+  margin:0;
+  font-size:1.55rem;
+  letter-spacing:-.06em;
+  font-weight:950;
+}
+.lock-card p{
+  color:var(--muted);
+  margin:8px 0 16px;
+}
+.lock-card input[type="password"]{
+  width:100%;
+  min-height:58px;
+  border:1px solid #dbe3ee;
+  border-radius:18px;
+  background:#f8fafc;
+  padding:0 14px;
+  font-size:1.2rem;
+  font-weight:850;
+  outline:0;
+}
+.lock-actions{
+  display:grid;
+  gap:10px;
+  margin-top:12px;
+}
+.lock-remember{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-weight:850;
+  color:#334155;
+  margin-top:12px;
+}
+.lock-error{
+  display:none;
+  margin-top:10px;
+  color:var(--red);
+  font-weight:900;
+}
+body.locked .app,
+body.locked .tabs{
+  filter:blur(8px);
+  pointer-events:none;
+  user-select:none;
+}
+.lock-button{
+  position:fixed;
+  right:14px;
+  bottom:calc(86px + env(safe-area-inset-bottom));
+  z-index:40;
+  width:46px;
+  height:46px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:0 12px 30px rgba(15,23,42,.12);
+  font-size:1.15rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+
+/* V6.2 — sincronização de correções */
+.sync-actions-row{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.sync-log-note{border-left:5px solid var(--blue);background:#eff6ff;border-radius:16px;padding:10px;margin-top:10px;font-size:.86rem}
+@media(min-width:760px){.sync-actions-row{grid-template-columns:repeat(3,1fr)}}
+
+
+/* V6.3 — reset correto + Sheets limpo */
+.reset-note{border-left:5px solid var(--orange);background:#fff7ed;border-radius:16px;padding:10px;margin-top:10px;font-size:.86rem}
+
+
+/* V6.4 — Correção Modo Rua limpo */
+body.rua-mode .quick-optional,
+body.rua-mode #quickObsWrap{
+  display:none!important;
+}
+body.controle-mode .quick-optional{
+  display:grid!important;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.controle-mode #quickObsWrap{
+  display:block!important;
+}
+body.rua-mode .quick-grid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+body.rua-mode .optional-toggle{
+  display:none!important;
+}
+body.controle-mode .optional-toggle{
+  display:none!important;
+}
+@media(min-width:760px){
+  body.rua-mode .quick-grid{grid-template-columns:repeat(2,1fr)!important}
+  body.controle-mode .quick-grid{grid-template-columns:repeat(3,1fr)!important}
+}
+
+
+/* V6.5 — correção de pendentes travados */
+.pending-danger{border-left:5px solid var(--red);background:#fff1f2;border-radius:16px;padding:10px;margin-top:10px;font-size:.86rem}
+
+
+/* V7.0 — Polimento final GitHub */
+:root{
+  --bg:#f5f8fd;
+}
+body{
+  background:
+    radial-gradient(circle at 20% 0%, rgba(14,165,233,.10), transparent 28%),
+    radial-gradient(circle at 100% 10%, rgba(37,99,235,.08), transparent 30%),
+    linear-gradient(180deg,#f8fbff 0,#f6f8fc 38%,#f4f7fb 100%);
+}
+.top{
+  box-shadow:0 10px 35px rgba(15,23,42,.06);
+}
+.logo,.lock-logo{
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.32), transparent 25%),
+    linear-gradient(135deg,#2563eb,#0ea5e9 72%,#06b6d4);
+}
+.brand h1{
+  letter-spacing:-.05em;
+}
+.hero{
+  background:
+    radial-gradient(circle at 82% 8%, rgba(255,255,255,.18), transparent 26%),
+    linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#0284c7 100%);
+}
+.modepill{
+  text-transform:none;
+  box-shadow:0 8px 22px rgba(15,23,42,.06);
+}
+.card,details{
+  box-shadow:0 16px 42px rgba(15,23,42,.07);
+}
+.btn.primary{
+  background:linear-gradient(135deg,#2563eb,#0ea5e9);
+  box-shadow:0 12px 24px rgba(37,99,235,.18);
+}
+.btn.green{
+  box-shadow:0 12px 24px rgba(22,163,74,.14);
+}
+.tabs{
+  box-shadow:0 -12px 35px rgba(15,23,42,.08);
+}
+.lock-card{
+  position:relative;
+  overflow:hidden;
+}
+.lock-card:before{
+  content:"";
+  position:absolute;
+  right:-70px;
+  top:-80px;
+  width:190px;
+  height:190px;
+  border-radius:999px;
+  background:rgba(14,165,233,.10);
+}
+.lock-card>*{
+  position:relative;
+}
+.lock-card h1:after{
+  content:"Painel pessoal protegido";
+  display:block;
+  font-size:.78rem;
+  letter-spacing:0;
+  color:var(--muted);
+  font-weight:800;
+  margin-top:4px;
+}
+.lock-button{
+  opacity:.82;
+}
+.publish-note{
+  border-left:5px solid var(--green);
+  background:#f0fdf4;
+  border-radius:16px;
+  padding:10px;
+  margin-top:10px;
+  font-size:.86rem;
+}
+.sync-log-note{
+  background:#f8fafc!important;
+  border-left-color:#94a3b8!important;
+  color:#334155;
+}
+.sync-log-note:before{
+  content:"Status: ";
+  font-weight:950;
+}
+body.rua-mode #quickObsWrap,
+body.rua-mode .quick-optional{
+  display:none!important;
+}
+body.rua-mode .quick-grid{
+  grid-template-columns:1fr 1fr!important;
+}
+body.rua-mode .hero .money{
+  line-height:.95;
+}
+body.rua-mode .card:first-of-type{
+  margin-top:8px;
+}
+@media(max-width:520px){
+  .app{max-width:430px}
+  .hero{margin-left:0;margin-right:0}
+  .lock-card{padding:20px}
+}
+
+</style>
+</head>
+<body class="locked">
+
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-logo"></div>
+    <h1>CORE-D 45</h1>
+    <p>Digite sua senha para acessar seu painel.</p>
+    <input id="lockPassword" type="password" placeholder="Senha" autocomplete="current-password" onkeydown="if(event.key==='Enter') unlockApp()">
+    <label class="lock-remember"><input id="rememberSession" type="checkbox" checked> Lembrar neste celular</label>
+    <div class="lock-actions">
+      <button class="btn primary big full" onclick="unlockApp()">Entrar</button>
+    </div>
+    <div class="lock-error" id="lockError">Senha incorreta.</div>
+    <p class="tiny muted" style="margin-bottom:0">Acesso protegido neste navegador.</p>
+  </div>
+</div>
+<button class="lock-button" id="lockButton" onclick="lockApp()" title="Bloquear">🔒</button>
+
+<div class="app">
+  <header class="top">
+    <div class="topline">
+      <div class="brand"><div class="logo"></div><div><h1>CORE-D 45</h1><small id="modeSubtitle">Modo Rua · salvar o dia</small></div></div>
+      <button class="modepill" onclick="toggleViewMode()" id="viewModeBtn">Modo Controle</button>
+    </div>
+  </header>
+
+  <main class="tab active" id="tab-hoje">
+    <div id="modeBanner" class="mode-banner rua"></div>
+    <section class="hero">
+      <small>Saldo disponível</small>
+      <div class="money" id="saldoHero">R$ 0,00</div>
+      <div class="herogrid">
+        <div class="heromini"><small>Meta hoje</small><b id="goalHero">R$ 0,00</b></div>
+        <div class="heromini"><small>Falta hoje</small><b id="missingHero">R$ 0,00</b></div>
+        <div class="heromini"><small>Missão</small><b id="missionHero">Junho</b></div>
+        <div class="heromini"><small>Próximo risco</small><b id="riskHero">—</b></div>
+      </div>
+    </section>
+<section class="layout">
+      <div class="card">
+        <h2>Quanto fez hoje?</h2>
+
+        <div class="quick-grid">
+          <div class="field"><label>Uber</label><div class="inputwrap"><span>R$</span><input id="quickUber" inputmode="decimal" type="number" step="0.01" placeholder="0,00"></div></div>
+          <div class="field"><label>99</label><div class="inputwrap"><span>R$</span><input id="quick99" inputmode="decimal" type="number" step="0.01" placeholder="0,00"></div></div>
+          <div class="field"><label>Abasteci</label><div class="inputwrap"><span>R$</span><input id="quickGas" inputmode="decimal" type="number" step="0.01" placeholder="0,00"></div></div>
+          <div class="field"><label>Gastos</label><div class="inputwrap"><span>R$</span><input id="quickSpend" inputmode="decimal" type="number" step="0.01" placeholder="0,00"></div></div>
+        </div>
+<div class="quick-optional" id="quickOptionalFields">
+          <div class="field"><label>Por fora / Pix</label><div class="inputwrap"><span>R$</span><input id="quickExtraRide" inputmode="decimal" type="number" step="0.01" placeholder="0,00"></div></div>
+          <div class="field"><label>Meta hoje</label><div class="inputwrap"><span>R$</span><input id="quickGoal" inputmode="decimal" type="number" step="0.01" placeholder="600"></div></div>
+        </div>
+
+        <div class="field quick-optional" id="quickObsWrap"><label>Observação rápida</label><textarea id="quickObs" placeholder="Ex: chuva, manutenção, gasto necessário..."></textarea></div>
+
+        <div class="save-row">
+          <button class="btn primary big full" onclick="saveDriverDay()">Salvar meu dia</button>
+          <button class="btn full" onclick="previewDriverDay()">Ver prévia</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card result" id="dayResult"></div>
+        <div id="smartDistributionPanel"></div>
+        <div class="card">
+          <h3>Próxima prioridade</h3>
+          <div id="priorityBox"></div>
+        </div>
+      </div>
+    </section>
+  
+
+
+    <section class="control-dashboard control-only" id="controlDashboard"></section>
+
+    
+</main>
+
+  <main class="tab" id="tab-missao">
+    <section class="card">
+      <h2>Missão atual</h2>
+      <div id="missionPanel"></div>
+    </section>
+    <details><summary>Contas da missão <span>abrir/fechar</span></summary><div class="foldbody" id="billsPanel"></div></details>
+    <details><summary>Caixinhas <span>abrir/fechar</span></summary><div class="foldbody" id="boxesPanel"></div></details>
+  </main>
+
+  <main class="tab" id="tab-dinheiro">
+    <section class="card">
+      <h2>Dinheiro</h2>
+      <div class="kpis">
+        <div class="kpi"><small>Saldo</small><b id="moneySaldo">R$ 0,00</b></div>
+        <div class="kpi"><small>Faturado mês</small><b id="moneyRevenue">R$ 0,00</b></div>
+        <div class="kpi"><small>Gasolina mês</small><b id="moneyGas">R$ 0,00</b></div>
+        <div class="kpi"><small>Desconto Uber</small><b id="moneyUberLoan">R$ 0,00</b></div>
+      </div>
+    </section>
+    <details open><summary>Extrato recente <span>últimos lançamentos</span></summary><div class="foldbody list" id="statementPanel"></div></details>
+    <details><summary>Backup e segurança <span>abrir</span></summary><div class="foldbody" id="backupPanel"></div></details>
+  </main>
+
+  <main class="tab" id="tab-mais">
+    <section class="card">
+      <h2>Mais opções</h2>
+      <p class="muted">Área de controle para usar parado. A rua fica simples; análise fica aqui.</p>
+      <div class="toolsgrid">
+        <button class="btn" onclick="openMore('carro')">🚗 Carro</button>
+        <button class="btn" onclick="openMore('sim')">🧪 Simulação</button>
+        <button class="btn" onclick="openMore('dealer')">🏁 01/07</button>
+        <button class="btn" onclick="openMore('config')">⚙️ Config</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="more-carro"></section>
+    <section class="card hidden" id="more-sim"></section>
+    <section class="card hidden" id="more-dealer"></section>
+    <section class="card hidden" id="more-config"></section>
+  </main>
+</div>
+
+<nav class="tabs">
+  <button class="active" onclick="openTab('hoje',this)"><span>🔥</span>Hoje</button>
+  <button onclick="openTab('missao',this)"><span>🎯</span>Missão</button>
+  <button onclick="openTab('dinheiro',this)"><span>🏦</span>Dinheiro</button>
+  <button onclick="openTab('mais',this)"><span>☰</span>Mais</button>
+</nav>
+
+<script>
+const STORAGE = "core_d_45_central_vida_v3";
+const brl = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const round2 = n => Math.round((Number(n)||0)*100)/100;
+const todayISO = () => new Date().toISOString().slice(0,10);
+const num = id => Number(document.getElementById(id)?.value || 0);
+const txt = id => document.getElementById(id)?.value || "";
+const uid = () => Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+
+const defaultBills = [
+ {id:uid(),mission:"2026-06",name:"Kovi com juros 08/06",value:995,due:"2026-06-08",paid:false},
+ {id:uid(),mission:"2026-06",name:"Pensão 10/06",value:410,due:"2026-06-10",paid:false},
+ {id:uid(),mission:"2026-06",name:"Inglês/protesto 11/06",value:709,due:"2026-06-11",paid:false},
+ {id:uid(),mission:"2026-06",name:"Kovi 12/06",value:903,due:"2026-06-12",paid:false},
+ {id:uid(),mission:"2026-06",name:"Água 15/06",value:570.05,due:"2026-06-15",paid:false},
+ {id:uid(),mission:"2026-06",name:"Cartório/protestos 17/06",value:1100,due:"2026-06-17",paid:false},
+ {id:uid(),mission:"2026-06",name:"Kovi 19/06",value:903,due:"2026-06-19",paid:false},
+ {id:uid(),mission:"2026-06",name:"Kovi 26/06",value:903,due:"2026-06-26",paid:false}
+];
+const dealerChecklist = ["CPF/protestos regularizados","Inglês pago","Cartório/protestos pago","CENPROT consultado","Serasa consultado","Registrato/SCR limpo","Kovi em dia","Saldo em conta","CNH","Comprovante residência","Extratos Uber","Extratos 99","Print tempo Uber","Print corridas","Print nota","Comprovantes renda"];
+
+function freshState(){
+ return {
+  saldo:1000, initialSaldo:1000, dailyGoal:600, activeMission:"2026-06",
+  mission:{title:"Junho/2026 — Chegar financiável",goal:"Chegar em 01/07 com CPF organizado, Kovi em dia, protestos pagos, documentos prontos e caixa forte.",revenueGoal:13800,targetBalance:5448.43},
+  uberLoan:{installment:643.41,paid:0,rate:30,active:true,start:"2026-06-07",next:"2026-06-18"},
+  bills: defaultBills,
+  boxes: defaultBills.map(b=>({id:uid(),name:b.name,target:b.value,saved:0,due:b.due,mission:b.mission,kind:"obrigacao"})),
+  transactions:[{id:uid(),date:"2026-06-07",type:"marco",category:"Recomeço",desc:"Dia zero — não trabalhou",value:0,obs:"Saldo inicial R$ 1.000"}],
+  operationMode:"kovi", viewMode:"rua"
+ };
+}
+let state = loadState();
+
+function loadState(){
+ try{
+  const raw = localStorage.getItem(STORAGE);
+  if(!raw) return freshState();
+  const s = JSON.parse(raw);
+  // migrate older app shape safely
+  s.saldo = Number(s.saldo ?? 1000);
+  s.initialSaldo = Number(s.initialSaldo ?? 1000);
+  s.dailyGoal = Number(s.dailyGoal ?? 600);
+  s.activeMission = s.activeMission || "2026-06";
+  s.mission = s.mission || {title:"Junho/2026 — Chegar financiável",goal:"Chegar em 01/07 preparado.",revenueGoal:13800,targetBalance:5448.43};
+  s.uberLoan = s.uberLoan || {installment:643.41,paid:0,rate:30,active:true,start:"2026-06-07",next:"2026-06-18"};
+  s.bills = Array.isArray(s.bills)&&s.bills.length?s.bills:defaultBills;
+  s.boxes = Array.isArray(s.boxes)&&s.boxes.length?s.boxes:s.bills.map(b=>({id:uid(),name:b.name,target:b.value,saved:0,due:b.due,mission:b.mission||"2026-06",kind:"obrigacao"}));
+  s.transactions = Array.isArray(s.transactions)?s.transactions:[];
+  s.viewMode = s.viewMode || "rua";
+  return s;
+ }catch(e){ return freshState(); }
+}
+function save(){localStorage.setItem(STORAGE, JSON.stringify(state)); render();
+applyLockState();}
+function toast(msg){const el=document.createElement("div");el.textContent=msg;el.style.cssText="position:fixed;left:14px;right:14px;bottom:82px;background:#0f172a;color:#fff;padding:13px 14px;border-radius:18px;z-index:100;font-weight:900;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25)";document.body.appendChild(el);setTimeout(()=>el.remove(),2400)}
+function openTab(id,btn){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.getElementById("tab-"+id).classList.add("active");document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");}
+function openMore(id){["carro","sim","dealer","config"].forEach(x=>document.getElementById("more-"+x).classList.toggle("hidden",x!==id));}
+function pct(a,b){return b?Math.max(0,Math.min(100,(a/b)*100)):0}
+function monthPrefix(){return state.activeMission || "2026-06"}
+function monthTx(){return state.transactions.filter(t=>(t.date||"").startsWith(monthPrefix()))}
+function monthRevenue(){return monthTx().filter(t=>t.type==="entrada").reduce((s,t)=>s+(Number(t.gross)||Number(t.value)||0),0)}
+function todayRevenue(){return state.transactions.filter(t=>t.date===todayISO()&&t.type==="entrada").reduce((s,t)=>s+(Number(t.gross)||Number(t.value)||0),0)}
+function monthGas(){return monthTx().filter(t=>t.category==="Gasolina").reduce((s,t)=>s+(Number(t.value)||0),0)}
+function monthDiscount(){return monthTx().filter(t=>t.type==="desconto"||t.category==="Empréstimo Uber").reduce((s,t)=>s+(Number(t.value)||0),0)}
+function remainingLoan(){return round2(Math.max(0,(Number(state.uberLoan.installment)||0)-(Number(state.uberLoan.paid)||0)))}
+function calcUberDiscount(uber){if(!state.uberLoan.active)return 0;return round2(Math.min((Number(uber)||0)*((Number(state.uberLoan.rate)||30)/100),remainingLoan()))}
+function currentBills(){return state.bills.filter(b=>(b.mission||"2026-06")===monthPrefix())}
+function pendingBills(){return currentBills().filter(b=>!b.paid)}
+function nextRisk(){
+ const p=pendingBills().sort((a,b)=>(a.due||"").localeCompare(b.due||""))[0];
+ if(!p)return "Sem conta pendente";
+ return p.name.replace(" com juros","").replace("protestos","prot.");
+}
+function priorityBox(){
+ const list = state.boxes.filter(b=>(b.mission||"2026-06")===monthPrefix() && (Number(b.target)||0)>(Number(b.saved)||0))
+  .sort((a,b)=>(a.due||"").localeCompare(b.due||""));
+ return list[0]||null;
+}
+function record(type,category,desc,value,obs="",extra={}){
+ state.transactions.unshift({id:uid(),date:todayISO(),type,category,desc,value:Number(value)||0,obs,...extra});
+}
+
+function toggleOptionalFields(){
+ const opt=document.getElementById("quickOptionalFields");
+ const obs=document.getElementById("quickObsWrap");
+ if(opt) opt.classList.toggle("open");
+ if(obs) obs.classList.toggle("open");
+}
+
+
+function activeBoxes(){
+ return state.boxes.filter(b=>(b.mission||"2026-06")===monthPrefix() && (Number(b.target)||0)>(Number(b.saved)||0))
+  .sort((a,b)=>(a.due||"").localeCompare(b.due||""));
+}
+function distributionPlan(amount){
+ let remaining=Number(amount)||0;
+ const plan=[];
+ if(remaining<=0) return plan;
+ activeBoxes().forEach(b=>{
+   if(remaining<=0) return;
+   const falta=Math.max(0,(Number(b.target)||0)-(Number(b.saved)||0));
+   if(falta<=0) return;
+   const dueDays = b.due ? Math.max(1, Math.ceil((new Date(b.due+"T00:00:00")-new Date(todayISO()+"T00:00:00"))/(1000*60*60*24))) : 1;
+   let suggested = Math.min(falta, remaining, Math.max(50, Math.ceil(falta/dueDays/10)*10));
+   // If first urgent item and enough cash, give it more weight.
+   if(plan.length===0) suggested = Math.min(falta, remaining, Math.max(suggested, Math.min(remaining, 200)));
+   if(suggested>0){
+     plan.push({box:b,amount:suggested});
+     remaining-=suggested;
+   }
+ });
+ return plan;
+}
+function renderSmartDistribution(netAmount){
+ const wrap=document.getElementById("smartDistributionPanel");
+ if(!wrap) return;
+ const amount = Number(netAmount ?? state.lastNetSaved ?? 0);
+ const plan = distributionPlan(amount);
+ if(!plan.length){
+   wrap.innerHTML = `<div class="smart-distribution"><h3>Caixinhas inteligentes</h3><p class="green"><b>Nenhuma obrigação da missão precisa de distribuição agora.</b></p></div>`;
+   return;
+ }
+ const total=plan.reduce((s,p)=>s+p.amount,0);
+ wrap.innerHTML = `<div class="smart-distribution">
+  <h3>Distribuição sugerida</h3>
+  <p class="muted">Líquido disponível do último lançamento: <b>${brl(amount)}</b>. Sugestão para proteger a missão atual.</p>
+  ${plan.map(p=>`<div class="dist-line"><span><b>${p.box.name}</b><br><small>Falta ${brl(Math.max(0,p.box.target-p.box.saved))}</small></span><b>${brl(p.amount)}</b></div>`).join("")}
+  <button class="btn green full" style="margin-top:10px" onclick="applyDistributionFromLast()">Aplicar distribuição (${brl(total)})</button>
+ </div>`;
+}
+function applyDistributionFromLast(){
+ const amount=Number(state.lastNetSaved)||0;
+ const plan=distributionPlan(amount);
+ if(!plan.length) return toast("Nada para distribuir.");
+ let total=0;
+ plan.forEach(p=>{
+   const b=state.boxes.find(x=>x.id===p.box.id);
+   if(!b) return;
+   const falta=Math.max(0,(Number(b.target)||0)-(Number(b.saved)||0));
+   const v=Math.min(falta, p.amount, state.saldo);
+   if(v<=0) return;
+   b.saved=(Number(b.saved)||0)+v;
+   state.saldo=round2(state.saldo-v);
+   total+=v;
+   record("caixinha","Caixinha inteligente",`Protegido: ${b.name}`,v,"Distribuição automática da missão");
+   queueSheetEvent("guardar_caixinha",{caixinha:b.name,valor:v,guardado_apos:b.saved,meta:b.target,observacao:"Distribuição automática"});
+ });
+ state.lastNetSaved=0;
+ save();
+ toast(`Distribuído: ${brl(total)}`);
+}
+function quickDepositBox(id, amount){
+ const b=state.boxes.find(x=>x.id===id); if(!b)return;
+ let v=amount;
+ if(v==="outro"){
+   const raw=prompt(`Quanto guardar em ${b.name}?`, "50");
+   if(raw===null)return;
+   v=Number(String(raw).replace(",","."));
+ }
+ v=Number(v)||0;
+ if(v<=0)return;
+ const falta=Math.max(0,(Number(b.target)||0)-(Number(b.saved)||0));
+ v=Math.min(v,falta,state.saldo);
+ if(v<=0){toast("Saldo insuficiente ou caixinha já protegida.");return}
+ b.saved=(Number(b.saved)||0)+v;
+ state.saldo=round2(state.saldo-v);
+ record("caixinha","Caixinha",`Guardado: ${b.name}`,v,"Botão rápido");
+ queueSheetEvent("guardar_caixinha",{caixinha:b.name,valor:v,guardado_apos:b.saved,meta:b.target,observacao:"Guardado em caixinha"});
+ save();
+ toast(`${brl(v)} protegido.`);
+}
+function boxesSummary(){
+ const boxes=activeBoxes();
+ const total=state.boxes.filter(b=>(b.mission||"2026-06")===monthPrefix()).reduce((s,b)=>s+(Number(b.target)||0),0);
+ const saved=state.boxes.filter(b=>(b.mission||"2026-06")===monthPrefix()).reduce((s,b)=>s+(Number(b.saved)||0),0);
+ const next=boxes[0];
+ return {total,saved,missing:Math.max(0,total-saved),next};
+}
+
+
+
+const CORE_D_PASSWORD = "45dnai";
+const LOCK_SESSION_KEY = STORAGE + "_unlocked";
+
+function isUnlocked(){
+  try { return sessionStorage.getItem(LOCK_SESSION_KEY)==="1" || localStorage.getItem(LOCK_SESSION_KEY)==="1"; }
+  catch(e){ return false; }
+}
+function applyLockState(){
+  const unlocked=isUnlocked();
+  document.body.classList.toggle("locked", !unlocked);
+  const screen=document.getElementById("lockScreen");
+  const btn=document.getElementById("lockButton");
+  if(screen) screen.style.display=unlocked?"none":"flex";
+  if(btn) btn.style.display=unlocked?"flex":"none";
+  if(!unlocked){
+    setTimeout(()=>document.getElementById("lockPassword")?.focus(),100);
+  }
+}
+function unlockApp(){
+  const input=document.getElementById("lockPassword");
+  const remember=document.getElementById("rememberSession");
+  const err=document.getElementById("lockError");
+  const pass=input ? input.value : "";
+  if(pass!==CORE_D_PASSWORD){
+    if(err) err.style.display="block";
+    if(input){ input.value=""; input.focus(); }
+    return;
+  }
+  try{
+    if(remember && remember.checked) localStorage.setItem(LOCK_SESSION_KEY,"1");
+    else sessionStorage.setItem(LOCK_SESSION_KEY,"1");
+  }catch(e){}
+  if(input) input.value="";
+  if(err) err.style.display="none";
+  applyLockState();
+}
+function lockApp(){
+  try{
+    localStorage.removeItem(LOCK_SESSION_KEY);
+    sessionStorage.removeItem(LOCK_SESSION_KEY);
+  }catch(e){}
+  applyLockState();
+}
+
+function ensureSheetsState(){
+ if(!state.sheets) state.sheets={url:"",token:"",enabled:false,lastSync:null,lastError:""};
+ if(!Array.isArray(state.pendingSync)) state.pendingSync=[];
+}
+function sheetsConfigured(){
+ ensureSheetsState();
+ return !!(state.sheets.enabled && state.sheets.url && state.sheets.token);
+}
+function syncStatus(){
+ ensureSheetsState();
+ if(!state.sheets.url) return {label:"Sheets não configurado", cls:"warn"};
+ if(state.pendingSync.length>0) return {label:`${state.pendingSync.length} pendente(s)`, cls:"warn"};
+ if(state.sheets.lastError) return {label:"Erro de sync", cls:"danger"};
+ if(state.sheets.lastSync) return {label:"Sincronizado", cls:"ok"};
+ return {label:"Conectado", cls:"ok"};
+}
+function queueSheetSync(payload){
+ ensureSheetsState();
+ const item={id:uid(),createdAt:new Date().toISOString(),status:"pending",payload};
+ item.payload=compactPayloadForSheets(item.payload); state.pendingSync.push(item);
+ processPendingSync();
+}
+function jsonpRequest(url, params, timeoutMs=12000){
+ return new Promise((resolve,reject)=>{
+   const cb="coreDJsonp_"+uid();
+   const script=document.createElement("script");
+   const cleanup=()=>{try{delete window[cb]}catch(e){}; script.remove(); clearTimeout(timer);};
+   window[cb]=(data)=>{cleanup(); resolve(data);};
+   const q=new URLSearchParams({...params,callback:cb});
+   script.src=url+(url.includes("?")?"&":"?")+q.toString();
+   script.onerror=()=>{cleanup(); reject(new Error("Falha ao conectar no Google Sheets"));};
+   const timer=setTimeout(()=>{cleanup(); reject(new Error("Tempo esgotado no Google Sheets"));},timeoutMs);
+   document.body.appendChild(script);
+ });
+}
+async function processPendingSync(){
+ ensureSheetsState();
+ if(state._syncing) return;
+ if(!sheetsConfigured()) { saveSilent(); return; }
+ const next=state.pendingSync[0];
+ if(!next) { renderSheetsStatus(); return; }
+ state._syncing=true;
+ try{
+   const res=await jsonpRequest(state.sheets.url,{
+     action:"append",
+     token:state.sheets.token,
+     payload:JSON.stringify(next.payload)
+   });
+   if(!res || res.ok!==true) throw new Error((res&&res.error)||"Resposta inválida do Sheets");
+   state.pendingSync.shift();
+   state.sheets.lastSync=new Date().toISOString();
+   state.sheets.lastError="";
+   state._syncing=false;
+   saveSilent();
+   renderSheetsStatus();
+   if(state.pendingSync.length) processPendingSync();
+ }catch(err){
+   state.sheets.lastError=err.message||String(err);
+   state._syncing=false;
+   saveSilent();
+   renderSheetsStatus();
+ }
+}
+async function testSheetsConnection(){
+ ensureSheetsState();
+ const url=(document.getElementById("sheetUrl")?.value||"").trim();
+ const token=(document.getElementById("sheetToken")?.value||"").trim();
+ if(!url || !token) return toast("Cole a URL e o token.");
+ try{
+   const res=await jsonpRequest(url,{action:"test",token});
+   if(!res || res.ok!==true) throw new Error((res&&res.error)||"Teste falhou");
+   state.sheets.url=url; state.sheets.token=token; state.sheets.enabled=true; state.sheets.lastError=""; state.sheets.lastSync=new Date().toISOString();
+   save();
+   toast("Google Sheets conectado.");
+ }catch(err){
+   toast("Erro no teste do Sheets.");
+   state.sheets.lastError=err.message||String(err);
+   save();
+ }
+}
+function saveSheetsConfig(){
+ ensureSheetsState();
+ state.sheets.url=(document.getElementById("sheetUrl")?.value||"").trim();
+ state.sheets.token=(document.getElementById("sheetToken")?.value||"").trim();
+ state.sheets.enabled=!!document.getElementById("sheetEnabled")?.checked;
+ state.sheets.lastError="";
+ save();
+ toast("Configuração do Sheets salva.");
+ processPendingSync();
+}
+
+
+function compactPayloadForSheets(payload){
+ const p={...(payload||{})};
+ // Evita URLs gigantes no JSONP. O histórico completo fica local/backup JSON.
+ delete p.lancamentos_resetados_json;
+ delete p.transacoes_json;
+ if(p.contas_json && String(p.contas_json).length>1800) p.contas_json="[compactado]";
+ if(p.caixinhas_json && String(p.caixinhas_json).length>1800) p.caixinhas_json="[compactado]";
+ if(p.config_json && String(p.config_json).length>1800) p.config_json="[compactado]";
+ if(p.evento_json && String(p.evento_json).length>1800) p.evento_json="[compactado]";
+ return p;
+}
+function clearPendingSync(){
+ ensureSheetsState();
+ if(!state.pendingSync || !state.pendingSync.length) return toast("Não há pendentes.");
+ if(!confirm(`Limpar ${state.pendingSync.length} pendente(s) travado(s)?\n\nUse isso quando a fila antiga ficou grande demais ou com erro.`)) return;
+ state.pendingSync=[];
+ state.sheets.lastError="";
+ save();
+ toast("Pendentes limpos.");
+}
+function compactPendingSync(){
+ ensureSheetsState();
+ state.pendingSync=(state.pendingSync||[]).map(item=>({
+   ...item,
+   payload: compactPayloadForSheets(item.payload)
+ }));
+ state.sheets.lastError="";
+ save();
+ toast("Pendentes compactados.");
+}
+
+function queueSheetEvent(eventType, data){
+ ensureSheetsState();
+ const payload={
+   origem:"core_d_45",
+   tipo:eventType,
+   id:uid(),
+   data:todayISO(),
+   timestamp:new Date().toISOString(),
+   missao:state.activeMission||"2026-06",
+   modo:state.operationMode||"kovi",
+   saldo_apos:Number(state.saldo)||0,
+   observacao:"",
+   evento_json:JSON.stringify(data||{}),
+   ...data
+ };
+ state.pendingSync.push({id:uid(),createdAt:new Date().toISOString(),status:"pending",payload:compactPayloadForSheets(payload)});
+ processPendingSync();
+}
+function backupCompletoPayload(){
+ return {
+   origem:"core_d_45",
+   tipo:"backup_completo",
+   id:uid(),
+   data:todayISO(),
+   timestamp:new Date().toISOString(),
+   missao:state.activeMission||"2026-06",
+   modo:state.operationMode||"kovi",
+   saldo_apos:Number(state.saldo)||0,
+   saldo:Number(state.saldo)||0,
+   contas_json:JSON.stringify(state.bills||[]),
+   caixinhas_json:JSON.stringify(state.boxes||[]),
+   config_json:JSON.stringify({
+     dailyGoal:state.dailyGoal,
+     uberLoan:state.uberLoan,
+     operationMode:state.operationMode,
+     activeMission:state.activeMission,
+     mission:state.mission
+   }),
+   transacoes_json:"[não enviado por URL; use Exportar cópia local para cópia completa]",
+   observacao:"Backup completo manual"
+ };
+}
+function enviarBackupCompletoSheets(){
+ ensureSheetsState();
+ if(!sheetsConfigured()) return toast("Configure o Google Sheets primeiro.");
+ queueSheetEvent("backup_completo", backupCompletoPayload());
+ toast("Backup completo colocado na fila de sync.");
+}
+
+function renderSheetsStatus(){
+ const st=syncStatus();
+ document.querySelectorAll("[data-sync-status]").forEach(el=>{
+   el.innerHTML=`<span class="sync-pill ${st.cls}">${st.label}</span>`;
+ });
+ const p=document.getElementById("sheetsConfigPanel");
+ if(p){
+   ensureSheetsState();
+   p.innerHTML=`<div class="config-box">
+    <h3>Backup automático no Google Sheets</h3>
+    <p class="muted tiny">Ao salvar o dia, o CORE-D guarda no celular e envia uma cópia para a planilha.</p>
+    <div data-sync-status></div>
+    <div class="form" style="margin-top:10px">
+      <div class="field"><label>URL do Web App / Apps Script</label><textarea id="sheetUrl" placeholder="Cole aqui a URL terminada em /exec">${state.sheets.url||""}</textarea></div>
+      <div class="field"><label>Token de segurança</label><div class="inputwrap"><input id="sheetToken" value="${state.sheets.token||""}" placeholder="Ex: core-d-45-danilo"></div></div>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:900"><input id="sheetEnabled" type="checkbox" ${state.sheets.enabled?"checked":""}> Ativar backup automático</label>
+    </div>
+    <div class="toolsgrid" style="margin-top:10px">
+      <button class="btn primary" onclick="saveSheetsConfig()">Salvar conexão</button>
+      <button class="btn green" onclick="testSheetsConnection()">Testar conexão</button>
+      <button class="btn" onclick="processPendingSync()">Reenviar pendentes</button>
+      <button class="btn" onclick="copyTokenSuggestion()">Copiar token sugerido</button>
+    </div>
+    <div class="sync-actions-row">
+      <button class="btn orange" onclick="enviarBackupCompletoSheets()">Enviar backup atual</button>
+      <button class="btn" onclick="compactPendingSync()">Corrigir pendentes</button>
+      <button class="btn red" onclick="clearPendingSync()">Limpar fila pendente</button>
+    </div>
+    <div class="sync-log-note">Google Sheets conectado como backup automático. Se algo ficar pendente, use reenviar ou limpar pendentes.</div>
+    ${state.pendingSync.length?`<div class="sync-panel warn"><b>${state.pendingSync.length} pendente(s).</b> Serão reenviados quando a conexão funcionar.</div>`:""}
+    ${state.sheets.lastError?`<div class="sync-panel danger"><b>Erro:</b> ${state.sheets.lastError}</div>`:""}
+    ${state.sheets.lastSync?`<div class="sync-panel ok"><b>Último sync:</b> ${new Date(state.sheets.lastSync).toLocaleString("pt-BR")}</div>`:""}
+    <div class="publish-note"><b>Pronto para GitHub:</b> renomeie este arquivo para <b>index.html</b> antes de publicar.</div>
+   </div>`;
+ }
+ const bp=document.getElementById("backupPanel");
+ if(bp && !bp.dataset.v6Rendered){
+   // leave renderMoney to fill this; this function also updates after render
+ }
+}
+function copyTokenSuggestion(){
+ const token="core-d-45-danilo";
+ navigator.clipboard?.writeText(token);
+ const el=document.getElementById("sheetToken");
+ if(el) el.value=token;
+ toast("Token sugerido copiado/preenchido.");
+}
+function saveSilent(){
+ localStorage.setItem(STORAGE, JSON.stringify(state));
+}
+function buildDaySyncPayload(d, obs){
+ return {
+   origem:"core_d_45",
+   tipo:"dia_motorista",
+   id:uid(),
+   data:todayISO(),
+   timestamp:new Date().toISOString(),
+   missao:state.activeMission||"2026-06",
+   modo:state.operationMode||"kovi",
+   uber:d.uber,
+   app99:d.n99,
+   por_fora:d.outside,
+   bruto:d.gross,
+   desconto_uber:d.discount,
+   gasolina:d.gas,
+   gasolina_real:d.gasReal,
+   gastos:d.spend,
+   liquido:d.net,
+   saldo_apos:state.saldo,
+   emprestimo_uber_falta:remainingLoan(),
+   observacao:obs||""
+ };
+}
+
+function previewData(){
+ const uber=round2(num("quickUber")), n99=round2(num("quick99")), outside=round2(num("quickExtraRide")), gasInput=round2(num("quickGas")), spend=round2(num("quickSpend"));
+ const gross=round2(uber+n99+outside);
+ const discount=round2(calcUberDiscount(uber));
+ const gasValue=round2(gasInput>0?gasInput:gross*0.233);
+ const net=round2(gross-discount-gasValue-spend);
+ return {uber,n99,outside,gas:gasValue,gasReal:gasInput>0,spend,gross,discount,net};
+}
+function previewDriverDay(){
+ const d=previewData();
+ const box=document.getElementById("dayResult");
+ box.classList.add("show");
+ box.innerHTML=`<h3>Prévia do dia</h3><div class="resultgrid">
+  <div class="rmini"><small>Bruto</small><b>${brl(d.gross)}</b></div>
+  <div class="rmini"><small>Desconto Uber</small><b class="orange">-${brl(d.discount)}</b></div>
+  <div class="rmini"><small>Gasolina</small><b class="orange">-${brl(d.gas)}</b></div>
+  <div class="rmini"><small>Gastos</small><b class="red">-${brl(d.spend)}</b></div>
+  <div class="rmini"><small>Líquido real</small><b class="${d.net>=0?'green':'red'}">${brl(d.net)}</b></div>
+  <div class="rmini"><small>Saldo após salvar</small><b>${brl(state.saldo+d.net)}</b></div>
+ </div><p class="muted tiny">A gasolina é real se tu preencher “Abasteci”; senão uso estimativa de 23,3%.</p>`;
+}
+function saveDriverDay(){
+ const d=previewData();
+ if(d.gross<=0 && d.gas<=0 && d.spend<=0){toast("Preenche algum valor do dia.");return}
+ const obs=txt("quickObs");
+ state.dailyGoal = num("quickGoal") || state.dailyGoal || 600;
+ state.saldo = round2(state.saldo + d.net);
+ state.lastNetSaved = Math.max(0,d.net);
+ state.uberLoan.paid=round2((Number(state.uberLoan.paid)||0)+d.discount);
+ if(remainingLoan()<=0) state.uberLoan.active=false;
+ record("entrada","Rua","Dia salvo — líquido real",d.net,`Bruto ${brl(d.gross)} | Uber ${brl(d.uber)} | 99 ${brl(d.n99)} | Fora ${brl(d.outside)} | ${obs}`,{gross:d.gross});
+ if(d.discount>0) record("desconto","Empréstimo Uber","Desconto automático Uber",d.discount,`Falta ${brl(remainingLoan())}`);
+ if(d.gas>0) record("saida","Gasolina",d.gasReal?"Abastecimento real":"Gasolina estimada",d.gas,d.gasReal?"Informado no dia":"Estimativa 23,3%");
+ if(d.spend>0) record("extra","Gastos do dia","Gasto lançado no dia",d.spend,obs||"");
+ queueSheetSync(buildDaySyncPayload(d, obs));
+ ["quickUber","quick99","quickExtraRide","quickGas","quickSpend","quickObs"].forEach(id=>document.getElementById(id).value="");
+ document.getElementById("quickGoal").value=state.dailyGoal;
+ save();
+ document.getElementById("dayResult").classList.add("show");
+ document.getElementById("dayResult").innerHTML=`<h3>Dia salvo ✅</h3><div class="resultgrid">
+  <div class="rmini"><small>Bruto</small><b>${brl(d.gross)}</b></div>
+  <div class="rmini"><small>Líquido real</small><b class="${d.net>=0?'green':'red'}">${brl(d.net)}</b></div>
+  <div class="rmini"><small>Desconto Uber</small><b>${brl(d.discount)}</b></div>
+  <div class="rmini"><small>Gasolina</small><b>${brl(d.gas)}</b></div>
+  <div class="rmini"><small>Gastos</small><b>${brl(d.spend)}</b></div>
+  <div class="rmini"><small>Saldo atualizado</small><b>${brl(state.saldo)}</b></div>
+ </div>`;
+ renderSmartDistribution(d.net);
+ const dist=document.getElementById("smartDistributionPanel"); if(dist) dist.scrollIntoView({behavior:"smooth",block:"nearest"});
+ toast("Dia salvo.");
+}
+
+function normalizeNameForMatch(s){
+ return String(s||"").toLowerCase()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+  .replace(/[^a-z0-9]/g,"");
+}
+function findBoxForBill(bill){
+ if(!bill) return null;
+ const billKey=normalizeNameForMatch(bill.name);
+ const due=String(bill.due||"");
+ let boxes=state.boxes.filter(x=>(x.mission||"2026-06")===(bill.mission||monthPrefix()));
+ // Prefer exact due date match.
+ let byDue=boxes.find(x=>String(x.due||"")===due);
+ if(byDue) return byDue;
+ // Then name containment.
+ return boxes.find(x=>{
+   const k=normalizeNameForMatch(x.name);
+   return k.includes(billKey) || billKey.includes(k) || (k.slice(0,8) && billKey.includes(k.slice(0,8)));
+ }) || null;
+}
+function payBillWithBox(id){
+ const b=state.bills.find(x=>x.id===id);
+ if(!b || b.paid) return;
+ const box=findBoxForBill(b);
+ if(!box) return toast("Não encontrei caixinha vinculada a essa conta.");
+ const billValue=Number(b.value)||0;
+ const boxSaved=Number(box.saved)||0;
+ if(boxSaved<=0) return toast("Essa caixinha ainda não tem saldo guardado.");
+ let useBox=Math.min(boxSaved,billValue);
+ let needSaldo=Math.max(0,billValue-useBox);
+ const mode = needSaldo>0 ? "caixinha + saldo" : "caixinha";
+ const msg = `Confirmar pagamento com ${mode}?\n${b.name} — ${brl(billValue)}\n\nUsar da caixinha: ${brl(useBox)}\nUsar do saldo livre: ${brl(needSaldo)}\n\nSaldo livre só será reduzido se faltar valor na caixinha.`;
+ if(!confirm(msg)) return;
+ if(needSaldo>0 && state.saldo<needSaldo){
+   return toast("Saldo livre insuficiente para completar o pagamento.");
+ }
+ box.saved=Math.max(0,boxSaved-useBox);
+ if(needSaldo>0) state.saldo=round2(state.saldo-needSaldo);
+ b.paid=true;
+ record("conta", needSaldo>0 ? "Conta paga com caixinha + saldo" : "Conta paga com caixinha", b.name, billValue, `Caixinha ${brl(useBox)}${needSaldo>0?` | Saldo ${brl(needSaldo)}`:""}`);
+ queueSheetEvent(needSaldo>0 ? "pagar_com_caixinha_saldo" : "pagar_com_caixinha",{conta:b.name,valor:billValue,caixinha:box.name,usado_caixinha:useBox,usado_saldo:needSaldo,caixinha_saldo_apos:box.saved,observacao:"Conta paga usando caixinha"});
+ save();
+ toast("Conta paga com caixinha.");
+}
+function boxPayStatusForBill(b){
+ const box=findBoxForBill(b);
+ if(!box) return `<div class="box-pay-status">Caixinha: <b>não vinculada</b></div>`;
+ const saved=Number(box.saved)||0, value=Number(b.value)||0;
+ const missing=Math.max(0,value-saved);
+ return `<div class="box-pay-status">Caixinha: <b>${brl(saved)}</b> guardado · ${missing>0?`falta <b>${brl(missing)}</b>`:`<b>pronta para pagar</b>`}</div>`;
+}
+
+function payBill(id){
+ const b=state.bills.find(x=>x.id===id); if(!b||b.paid)return;
+ if(!confirm(`Confirmar pagamento?
+${b.name} — ${brl(b.value)}
+Isso vai reduzir teu saldo.`))return;
+ if(state.saldo<b.value && !confirm("Saldo menor que a conta. Pagar mesmo assim?"))return;
+ state.saldo=round2(state.saldo-(Number(b.value)||0));b.paid=true;record("conta","Conta paga",b.name,b.value,b.due);queueSheetEvent("pagar_conta",{conta:b.name,valor:b.value,forma:"saldo",vencimento:b.due,observacao:"Conta paga com saldo"});save();
+}
+function depositBox(id){
+ const b=state.boxes.find(x=>x.id===id); if(!b)return;
+ const falta=Math.max(0,(Number(b.target)||0)-(Number(b.saved)||0));
+ const raw=prompt(`Quanto guardar em ${b.name}?`, Math.min(falta,state.saldo).toFixed(2));
+ if(raw===null)return; const v=Number(String(raw).replace(",","."));
+ if(!v||v<=0)return; if(v>state.saldo){toast("Saldo insuficiente.");return}
+ b.saved=(Number(b.saved)||0)+v;state.saldo=round2(state.saldo-v);record("caixinha","Caixinha",`Guardado: ${b.name}`,v);save();
+}
+function toggleViewMode(){state.viewMode=state.viewMode==="rua"?"controle":"rua";save();toast(state.viewMode==="rua"?"Modo Rua ativo: tela simples.":"Modo Controle ativo: análise liberada.");}
+function renderHero(){
+ const rev=todayRevenue(), goal=Number(state.dailyGoal)||600;
+ document.getElementById("saldoHero").textContent=brl(state.saldo);
+ document.getElementById("goalHero").textContent=brl(goal);
+ document.getElementById("missingHero").textContent=brl(Math.max(0,goal-rev));
+ document.getElementById("missionHero").textContent="Junho";
+ document.getElementById("riskHero").textContent=nextRisk();
+ document.getElementById("quickGoal").value=state.dailyGoal||600;
+}
+function renderPriority(){
+ const b=priorityBox(), el=document.getElementById("priorityBox");
+ if(!b){el.innerHTML='<p class="green"><b>Nenhuma caixinha pendente da missão.</b></p>';return}
+ const falta=Math.max(0,(Number(b.target)||0)-(Number(b.saved)||0));
+ el.innerHTML=`<div class="priority"><b>${b.name}</b><br><span class="muted">Falta proteger: ${brl(falta)}</span><div class="progress"><div class="bar" style="width:${pct(b.saved,b.target)}%"></div></div><button class="btn green full" onclick="depositBox('${b.id}')">Proteger agora</button></div>`;
+}
+function renderMission(){
+ const m=state.mission, rev=monthRevenue();
+ const bs=boxesSummary();
+ document.getElementById("missionPanel").innerHTML=`<h3>${m.title}</h3><p>${m.goal}</p>
+ <div class="mission-summary-grid">
+  <div class="mission-summary-mini"><small>Faturado</small><b>${brl(rev)}</b></div>
+  <div class="mission-summary-mini"><small>Falta faturar</small><b>${brl(Math.max(0,m.revenueGoal-rev))}</b></div>
+  <div class="mission-summary-mini"><small>Protegido</small><b>${brl(bs.saved)}</b></div>
+  <div class="mission-summary-mini"><small>Próxima</small><b>${bs.next?bs.next.name:"—"}</b></div>
+ </div>
+ <div class="progress"><div class="bar" style="width:${pct(rev,m.revenueGoal)}%"></div></div>`;
+ const bills=currentBills();
+ document.getElementById("billsPanel").innerHTML=`<div class="list">${bills.map(b=>`<div class="item"><div class="itemhead"><div><b>${b.name}</b><br><small>${b.due} · ${brl(b.value)}</small></div><span class="status ${b.paid?'ok':'warn'}">${b.paid?'Paga':'Pendente'}</span></div>${!b.paid?boxPayStatusForBill(b):""}${!b.paid?`<div class="pay-options"><button class="btn green" onclick="payBillWithBox('${b.id}')">Pagar com caixinha</button><button class="btn" onclick="payBill('${b.id}')">Pagar com saldo</button></div>`:""}</div>`).join("")}</div>`;
+ document.getElementById("boxesPanel").innerHTML=`<div class="list">${state.boxes.filter(b=>(b.mission||"2026-06")===monthPrefix()).map(b=>`<div class="item"><div class="itemhead"><div><b>${b.name}</b><br><small>${brl(b.saved)} de ${brl(b.target)}</small></div><span class="status">${brl(Math.max(0,b.target-b.saved))}</span></div><div class="progress"><div class="bar" style="width:${pct(b.saved,b.target)}%"></div></div><div class="quick-box-actions"><button class="btn" onclick="quickDepositBox('${b.id}',50)">+50</button><button class="btn" onclick="quickDepositBox('${b.id}',100)">+100</button><button class="btn" onclick="quickDepositBox('${b.id}',200)">+200</button><button class="btn" onclick="quickDepositBox('${b.id}','outro')">Outro</button></div></div>`).join("")}</div>`;
+}
+
+
+function revertUberLoanDiscount(amount){
+ const v=round2(amount);
+ if(v<=0) return;
+ state.uberLoan.paid=round2(Math.max(0,(Number(state.uberLoan.paid)||0)-v));
+ if(remainingLoan()>0) state.uberLoan.active=true;
+}
+function removedUberDiscountFromTxs(txs){
+ return round2((txs||[]).filter(t=>t.type==="desconto" || t.category==="Empréstimo Uber").reduce((s,t)=>s+(Number(t.value)||0),0));
+}
+
+function transactionAffectsSaldo(t){
+ // In V5, only the net "entrada" actually changes saldo when a day is saved.
+ // Gasolina/desconto/gasto are report lines already included inside líquido real.
+ if(!t) return 0;
+ if(t.type==="entrada") return -(Number(t.value)||0);
+ if(t.type==="retirada_caixinha") return -(Number(t.value)||0);
+ if(t.type==="caixinha") return Number(t.value)||0;
+ if(t.type==="conta") return Number(t.value)||0;
+ return 0;
+}
+function deleteTransaction(id){
+ const t=state.transactions.find(x=>x.id===id);
+ if(!t) return;
+ const delta=transactionAffectsSaldo(t);
+ const msg=`Excluir lançamento?\n\n${t.date} — ${t.desc}\nValor: ${brl(t.value)}\n\nAjuste no saldo: ${brl(delta)}`;
+ if(!confirm(msg)) return;
+ state.saldo = round2(state.saldo + delta);
+ if(t.type==="desconto" || t.category==="Empréstimo Uber"){revertUberLoanDiscount(t.value);}
+ state.transactions=state.transactions.filter(x=>x.id!==id);
+ queueSheetEvent("excluir_lancamento",{lancamento_excluido_json:JSON.stringify(t),ajuste_saldo:round2(delta),desconto_uber_revertido:(t.type==="desconto"||t.category==="Empréstimo Uber")?round2(t.value):0,observacao:"Lançamento excluído no app"});
+ save();
+ toast("Lançamento excluído e saldo ajustado.");
+}
+function resetDay(date){
+ const d=date || prompt("Qual dia quer resetar? Formato AAAA-MM-DD", todayISO());
+ if(!d) return;
+ const txs=state.transactions.filter(t=>t.date===d && t.type!=="marco");
+ if(!txs.length) return toast("Não encontrei lançamentos nesse dia.");
+ const entradas=round2(txs.filter(t=>t.type==="entrada").reduce((s,t)=>s+(Number(t.value)||0),0));
+ const caixas=round2(txs.filter(t=>t.type==="caixinha").reduce((s,t)=>s+(Number(t.value)||0),0));
+ const contas=round2(txs.filter(t=>t.type==="conta").reduce((s,t)=>s+(Number(t.value)||0),0));
+ const retirada=round2(txs.filter(t=>t.type==="retirada_caixinha").reduce((s,t)=>s+(Number(t.value)||0),0));
+ const descontoUber=removedUberDiscountFromTxs(txs);
+ const delta = round2(-entradas + caixas + contas - retirada);
+ const msg=`Resetar o dia ${d}?\n\nEntradas líquidas removidas: ${brl(entradas)}\nCaixinhas do dia devolvidas ao saldo: ${brl(caixas)}\nContas pagas do dia devolvidas ao saldo: ${brl(contas)}\nDesconto Uber revertido: ${brl(descontoUber)}\n\nAjuste no saldo: ${brl(delta)}\n\nIsso remove os lançamentos do dia e corrige o empréstimo Uber.`;
+ if(!confirm(msg)) return;
+ state.saldo = round2(state.saldo + delta);
+ revertUberLoanDiscount(descontoUber);
+ state.transactions=state.transactions.filter(t=>!(t.date===d && t.type!=="marco"));
+ queueSheetEvent("reset_dia",{data_resetada:d,quantidade_lancamentos:txs.length,ajuste_saldo:delta,desconto_uber_revertido:descontoUber,lancamentos_resetados_resumo:txs.map(t=>`${t.type}:${t.category}:${round2(t.value)}`).join(" | "),observacao:`Reset limpo: ${txs.length} lançamentos removidos, saldo ajustado ${brl(delta)}, Uber revertido ${brl(descontoUber)}`});
+ save();
+ toast(`Dia ${d} resetado.`);
+}
+function resetToday(){
+ resetDay(todayISO());
+}
+
+function renderMoney(){
+ document.getElementById("moneySaldo").textContent=brl(state.saldo);
+ document.getElementById("moneyRevenue").textContent=brl(monthRevenue());
+ document.getElementById("moneyGas").textContent=brl(monthGas());
+ document.getElementById("moneyUberLoan").textContent=brl(monthDiscount());
+ document.getElementById("statementPanel").innerHTML=`
+  <div class="danger-zone">
+    <b>Corrigiu errado?</b>
+    <p class="muted tiny">Use para voltar um dia lançado errado. O saldo será ajustado pela entrada líquida do dia.</p>
+    <div class="tx-actions">
+      <button class="btn red" onclick="resetToday()">Resetar hoje</button>
+      <button class="btn" onclick="resetDay()">Resetar outra data</button>
+    </div>
+  </div>
+  ${state.transactions.slice(0,40).map(t=>`<div class="item"><div class="itemhead"><div><b>${t.date} — ${t.desc}</b><br><small>${t.type} · ${t.category}${t.obs?' · '+t.obs:''}</small></div><b>${brl(t.value)}</b></div><div class="tx-actions"><button class="btn red" onclick="deleteTransaction('${t.id}')">Excluir</button></div></div>`).join("")}`;
+ document.getElementById("backupPanel").innerHTML=`<p>Backup salva uma cópia dos dados em JSON.</p><div data-sync-status></div><button class="btn primary full" style="margin-top:10px" onclick="exportBackup()">Exportar cópia local</button><input id="backupFile" type="file" accept=".json" class="hidden" onchange="importBackupFile(event)"><button class="btn full" style="margin-top:8px" onclick="document.getElementById('backupFile').click()">Importar cópia local</button><div id="sheetsConfigPanel"></div>`;
+}
+function renderMore(){
+ document.getElementById("more-carro").innerHTML=`<h2>Carro</h2><p><b>Modo atual:</b> ${state.operationMode||"kovi"}</p><div class="toolsgrid"><button class="btn" onclick="state.operationMode='kovi';save()">Kovi</button><button class="btn" onclick="state.operationMode='analise';save()">Dolphin em análise</button><button class="btn" onclick="state.operationMode='aprovado';save()">Dolphin aprovado</button><button class="btn" onclick="state.operationMode='carencia';save()">Carência</button></div><p class="muted">Kovi prioriza Kovi/gasolina/CPF. Dolphin prioriza recarga, reserva e parcela futura.</p>`;
+ document.getElementById("more-sim").innerHTML=`<h2>Simulação rápida</h2><div class="form desktop2"><div class="field"><label>Meta diária simulada</label><div class="inputwrap"><span>R$</span><input id="simDaily" type="number" value="${state.dailyGoal||600}"></div></div><div class="field"><label>Dias até 30/06</label><div class="inputwrap"><input id="simDays" type="number" value="23"></div></div></div><button class="btn primary full" style="margin-top:10px" onclick="calcSim()">Calcular</button><div id="simOut"></div>`;
+ document.getElementById("more-dealer").innerHTML=`<h2>01/07 — Concessionária</h2><div class="list">${dealerChecklist.map((x,i)=>`<label class="item"><input type="checkbox" ${state['dealer_'+i]?'checked':''} onchange="state['dealer_${i}']=this.checked;save()"> <b>${x}</b></label>`).join("")}</div>`;
+ document.getElementById("more-config").innerHTML=`<h2>Configurações</h2><div class="form"><div class="field"><label>Saldo manual</label><div class="inputwrap"><span>R$</span><input id="cfgSaldo" type="number" value="${state.saldo}"></div></div><div class="field"><label>Parcela Uber</label><div class="inputwrap"><span>R$</span><input id="cfgLoan" type="number" value="${state.uberLoan.installment}"></div></div><div class="field"><label>Já descontado Uber</label><div class="inputwrap"><span>R$</span><input id="cfgLoanPaid" type="number" value="${state.uberLoan.paid}"></div></div></div><button class="btn primary full" style="margin-top:10px" onclick="saveConfig()">Salvar config</button><div id="sheetsConfigPanel"></div>`;
+}
+function calcSim(){
+ const daily=Number(document.getElementById("simDaily").value)||0, days=Number(document.getElementById("simDays").value)||0;
+ const result=state.saldo+(daily*days*0.767)-pendingBills().reduce((s,b)=>s+b.value,0);
+ document.getElementById("simOut").innerHTML=`<div class="priority"><b>Resultado projetado:</b> ${brl(result)}<br><span class="${result>=state.mission.targetBalance?'green':'red'}">${result>=state.mission.targetBalance?'Chega no alvo':'Não chega no alvo'}</span></div>`;
+}
+function saveConfig(){
+ state.saldo=Number(document.getElementById("cfgSaldo").value)||state.saldo;
+ state.uberLoan.installment=Number(document.getElementById("cfgLoan").value)||state.uberLoan.installment;
+ state.uberLoan.paid=Number(document.getElementById("cfgLoanPaid").value)||0;
+ queueSheetEvent("config_atualizada",{config_json:JSON.stringify({saldo:state.saldo,uberLoan:state.uberLoan,dailyGoal:state.dailyGoal,operationMode:state.operationMode}),observacao:"Configuração atualizada"});
+ save();toast("Configuração salva.");
+}
+function exportBackup(){
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`core-d-45-backup-${todayISO()}.json`;a.click();URL.revokeObjectURL(a.href);
+}
+function importBackupFile(ev){
+ const f=ev.target.files[0]; if(!f)return;
+ const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();toast("Backup importado.");}catch(e){toast("Backup inválido.")}};r.readAsText(f);
+}
+
+
+function renderModeExperience(){
+ const isControl=state.viewMode==="controle";
+ document.body.classList.toggle("controle-mode",isControl);
+ document.body.classList.toggle("rua-mode",!isControl);
+
+ const btn=document.getElementById("viewModeBtn");
+ if(btn) btn.textContent=isControl?"Rua":"Controle";
+
+ const subtitle=document.getElementById("modeSubtitle");
+ if(subtitle) subtitle.textContent=isControl?"Modo Controle · gestão":"Modo Rua · salvar o dia";
+
+ const banner=document.getElementById("modeBanner");
+ if(banner){
+   banner.className="mode-banner "+(isControl?"controle":"rua");
+   banner.innerHTML=isControl
+    ?"🧠 <b>Modo Controle.</b>"
+    :"🚗 <b>Modo Rua.</b>";
+ }
+
+ const dash=document.getElementById("controlDashboard");
+ if(dash){
+   const rev=monthRevenue();
+   const pend=pendingBills().reduce((s,b)=>s+(Number(b.value)||0),0);
+   const loanRemain=remainingLoan();
+   const next=priorityBox();
+   dash.innerHTML=`<div class="control-compact-card">
+    <h2>Painel de controle</h2>
+    <div class="kpis">
+      <div class="kpi"><small>Faturado mês</small><b>${brl(rev)}</b></div>
+      <div class="kpi"><small>Pendentes</small><b>${brl(pend)}</b></div>
+      <div class="kpi"><small>Uber falta</small><b>${brl(loanRemain)}</b></div>
+      <div class="kpi"><small>Próxima proteção</small><b>${next?next.name.replace(" com juros",""):"—"}</b></div>
+    </div>
+    <div class="compact-actions">
+      <button class="btn" onclick="document.querySelector('.tabs button:nth-child(2)').click()">🎯 Missão</button>
+      <button class="btn" onclick="document.querySelector('.tabs button:nth-child(3)').click()">🏦 Dinheiro</button>
+      <button class="btn" onclick="document.querySelector('.tabs button:nth-child(4)').click();openMore('carro')">🚗 Carro</button>
+      <button class="btn" onclick="document.querySelector('.tabs button:nth-child(4)').click();openMore('config')">⚙️ Config</button>
+    </div>
+   </div>`;
+ }
+}
+
+
+function render(){
+ ensureSheetsState();
+ renderHero();renderPriority();renderMission();renderMoney();renderMore();renderSmartDistribution(state.lastNetSaved||0);renderModeExperience();renderSheetsStatus();
+
+ applyLockState();
+}
+document.addEventListener("input",e=>{if(["quickUber","quick99","quickExtraRide","quickGas","quickSpend"].includes(e.target.id)) previewDriverDay()})
+render();
+</script>
+</body>
+</html>
