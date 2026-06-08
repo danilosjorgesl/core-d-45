@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CORE-D 45 V7.6 CONTAS PAGAS CORRIGIDAS — GitHub Ready -->
+<!-- CORE-D 45 V7.7 FINAL SHEETS 45DNAI — GitHub Ready -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CORE-D 45 — App V7.6</title>
+<title>CORE-D 45 — App V7.7</title>
 <meta name="theme-color" content="#f8fafc">
 <meta name="description" content="CORE-D 45 — painel pessoal de lançamento diário, missão financeira e backup automático no Google Sheets.">
 <meta name="robots" content="noindex,nofollow">
@@ -1072,23 +1072,47 @@ async function testSheetsConnection(){
 }
 
 
-const DEFAULT_SHEETS_URL_CORE_D = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
-const DEFAULT_SHEETS_TOKEN_CORE_D = "core-d-45-danilo";
+const DEFAULT_SHEETS_URL_CORE_D = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+const DEFAULT_SHEETS_TOKEN_CORE_D = "45dnai";
 
 
 
-function aplicarLinkOficialSheetsV75(){
+
+function aplicarSheetsFinalV77(){
   try{
     ensureSheetsState();
-    state.sheets.url = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
-    state.sheets.token = "core-d-45-danilo";
+    state.sheets.url = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+    state.sheets.token = "45dnai";
     state.sheets.enabled = true;
     state.sheets.lastError = "";
     const u=document.getElementById("sheetsUrl");
     const t=document.getElementById("sheetsToken");
     const e=document.getElementById("sheetsEnabled");
-    if(u) u.value = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
-    if(t) t.value = "core-d-45-danilo";
+    if(u) u.value = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+    if(t) t.value = "45dnai";
+    if(e) e.checked = true;
+    save();
+    toast("Sheets final V7.7 aplicado.");
+    try{ renderApp(); }catch(_e){}
+  }catch(err){ toast("Erro ao aplicar Sheets final."); }
+}
+function testarSheetsFinalV77(){
+  aplicarSheetsFinalV77();
+  setTimeout(()=>{ try{ testSheetsConnection(); }catch(e){ toast("Erro no teste."); } }, 350);
+}
+
+function aplicarLinkOficialSheetsV75(){
+  try{
+    ensureSheetsState();
+    state.sheets.url = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+    state.sheets.token = "45dnai";
+    state.sheets.enabled = true;
+    state.sheets.lastError = "";
+    const u=document.getElementById("sheetsUrl");
+    const t=document.getElementById("sheetsToken");
+    const e=document.getElementById("sheetsEnabled");
+    if(u) u.value = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+    if(t) t.value = "45dnai";
     if(e) e.checked = true;
     save();
     toast("Link oficial do Sheets aplicado.");
@@ -1103,8 +1127,8 @@ function testarLinkOficialSheetsV75(){
 function forcarNovaUrlSheetsV74(){
   try{
     ensureSheetsState();
-    state.sheets.url = "https://script.google.com/macros/s/AKfycbwwo0EjX1HG5_OXAUg7mKeuN4oI_3OMheFmFo3qjX5ql3z_P7dBssCjpq6lorMBOlb_vQ/exec";
-    state.sheets.token = "core-d-45-danilo";
+    state.sheets.url = "https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec";
+    state.sheets.token = "45dnai";
     state.sheets.enabled = true;
     state.sheets.lastError = "";
     state.pendingSync = [];
@@ -1266,12 +1290,13 @@ function renderSheetsStatus(){
     <div data-sync-status></div>
     <div class="form" style="margin-top:10px">
       <div class="field"><label>URL do Web App / Apps Script</label><textarea id="sheetUrl" placeholder="Cole aqui a URL terminada em /exec">${state.sheets.url||""}</textarea></div>
-      <div class="field"><label>Token de segurança</label><div class="inputwrap"><input id="sheetToken" value="${state.sheets.token||""}" placeholder="Ex: core-d-45-danilo"></div></div>
+      <div class="field"><label>Token de segurança</label><div class="inputwrap"><input id="sheetToken" value="${state.sheets.token||""}" placeholder="Ex: 45dnai"></div></div>
       <label style="display:flex;gap:8px;align-items:center;font-weight:900"><input id="sheetEnabled" type="checkbox" ${state.sheets.enabled?"checked":""}> Ativar backup automático</label>
     </div>
     <div class="toolsgrid" style="margin-top:10px">
       <button class="btn primary" onclick="saveSheetsConfig()">Salvar conexão</button>
       <button class="btn green" onclick="testSheetsConnection()">Testar conexão</button>
+      <button class="btn orange" onclick="testarSheetsFinalV77()">Testar Sheets final</button>
       <button class="btn primary" onclick="testarSheetsAutomaticoCoreD()">Configurar automático</button>
       <button class="btn orange" onclick="testarNovaUrlSheetsV74()">Aplicar link oficial Sheets</button>
       <button class="btn green" onclick="testarLinkOficialSheetsV75()">Testar link oficial</button>
@@ -1298,7 +1323,7 @@ function renderSheetsStatus(){
  }
 }
 function copyTokenSuggestion(){
- const token="core-d-45-danilo";
+ const token="45dnai";
  navigator.clipboard?.writeText(token);
  const el=document.getElementById("sheetToken");
  if(el) el.value=token;

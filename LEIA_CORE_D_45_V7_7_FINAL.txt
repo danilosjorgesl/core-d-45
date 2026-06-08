@@ -1,0 +1,25 @@
+CORE-D 45 V7.7 — Final consolidada
+
+Inclui:
+- Correção de contas pagas.
+- Kovi paga sai da próxima prioridade/pendentes.
+- Link do Sheets atualizado.
+- Token final: 45dnai
+
+URL Apps Script:
+https://script.google.com/macros/s/AKfycbzgGqF8ljrpid0-sv1sWHv8mugF0B_PQRj__Qb43MRVdjgTTluq2WF3N1aaNI7DaDnsOw/exec
+
+Ao subir no GitHub:
+1. Suba todos os arquivos na raiz:
+   index.html
+   manifest.json
+   service-worker.js
+   icon-192.png
+   icon-512.png
+
+No celular:
+1. Abra https://danilosjorgesl.github.io/core-d-45/?v=77
+2. Atualize duas vezes.
+3. Vá em Dinheiro > Backup e segurança.
+4. Clique em Testar Sheets final.
+5. Se OK, não precisa mexer mais no Apps Script.
